@@ -1,0 +1,19 @@
+KU746283,1200,   #rRNA homology
+KU746280,1200,   #rRNA homology
+NC_032111,500,   #Human homology
+NC_009424,500,   #Human homology
+HM133903,500,    #Human homology
+EU410304,300,    #e.coli homology
+KJ627438,500,    #lowcomplexity (Cyprinid herpesvirus 3)
+KX544842,600,    #lowcomplexity + telomere-like (Cyprinid herpesvirus 3)
+KX544847,500,    #lowcomplexity (Cyprinid herpesvirus 3)
+AP008984,500,    #lowcomplexity (Cyprinid herpesvirus 3)
+KX544848,500,    #lowcomplexity (Cyprinid herpesvirus 3)
+NC_009127,500,   #lowcomplexity (Cyprinid herpesvirus 3)
+NC_019491,500,   #lowcomplexity (Cyprinid herpesvirus 3)
+M96687,500,      #ubiquitin mRNA bovin homology
+LT907991,500,    #ubiquitin mRNA bovin homology
+NC_024382,1000,  #lowcomplexity (Alcelaphine gammaherpesvirus 2)
+NC_014567,1000,  #lowcomplexity (Saimiriine herpesvirus 1)
+NC_002665,1200,  #Bovin Homology NC_002665:GENE_107313-108635
+AB618031,500,    #LacZ
