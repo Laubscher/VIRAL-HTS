@@ -1,0 +1,20 @@
+#!/bin/bash
+
+pathIndex=$1
+
+#adapteur
+
+ java -jar trimmomatic-0.36.jar PE -threads $CPU -basein $(echo $TEMPNAME)_R1_001.fastq -baseout $(echo $TEMPNAME).fq ILLUMINACLIP:$pathIndex:1:30:7:1:true MINLEN:75 ;
+
+ mv $(echo $TEMPNAME)_1P.fq $(echo $TEMPNAME)_tr_R1_001.fastq ;
+
+ mv $(echo $TEMPNAME)_2P.fq $(echo $TEMPNAME)_tr_R2_001.fastq ;
+
+ #lowquality
+
+ java -jar trimmomatic-0.36.jar PE -threads $CPU -basein $(echo $TEMPNAME)_tr_R1_001.fastq -baseout $(echo $TEMPNAME).fq MAXINFO:40:0.3 LEADING:10 TRAILING:10 MINLEN:75 ;
+
+ mv $(echo $TEMPNAME)_1P.fq $(echo $TEMPNAME)_tr_R1_001.fastq ;
+
+ mv $(echo $TEMPNAME)_2P.fq $(echo $TEMPNAME)_tr_R2_001.fastq ;
+
