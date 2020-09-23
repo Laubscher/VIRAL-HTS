@@ -31,7 +31,7 @@ done
 
 snap-aligner paired $DB $1_R1_001.fastq $1_R2_001.fastq -t $CPU -d 16 -hp -f -x -E u -F b -mrl 50 -o $1.bam
 
-samtools view -uh -o $1.2.bam -f 0x04 $1.bam # maybe not mandatory with opt - F b (yes for the too short too many Ns)
+samtools view -uh -o $1.2.bam -f 0x04 $1.bam
 samtools sort -@ $CPU -n $1.2.bam -o $1.bam.sorted
 samtools fastq -1 $1_fl_R1_001.fastq -2 $1_fl_R2_001.fastq $1.bam.sorted
 
