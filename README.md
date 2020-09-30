@@ -15,6 +15,8 @@ This repository contains scripts used for analysis of High-Throughput Sequencing
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 virusscan can be found here: <https://github.com/sib-swiss/virusscan>.
-trimmomatic can be found here:<http://www.usadellab.org/cms/?page=trimmomatic>
-IDBA-UD can be found here:<https://github.com/loneknightpy/idba>
-snap-aligner can be found here:<http://snap.cs.berkeley.edu/>
+trimmomatic can be found here:<http://www.usadellab.org/cms/?page=trimmomatic>.
+IDBA-UD can be found here:<https://github.com/loneknightpy/idba>.
+snap-aligner can be found here:<http://snap.cs.berkeley.edu/>.
+Blast can be found here:<https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/>.
+samtools can be found here:<http://www.htslib.org/download/>.
