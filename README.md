@@ -18,5 +18,5 @@ virusscan can be found here: <https://github.com/sib-swiss/virusscan>.
 trimmomatic can be found here:<http://www.usadellab.org/cms/?page=trimmomatic>.  
 IDBA-UD can be found here:<https://github.com/loneknightpy/idba>.  
 snap-aligner can be found here:<http://snap.cs.berkeley.edu/>.  
-Blast can be found here:<https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/>.  
+Blast+ can be found here:<https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/>.  
 Samtools can be found here:<http://www.htslib.org/download/>.  
