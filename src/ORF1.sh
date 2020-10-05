@@ -2,8 +2,8 @@
 
 FILE=$(echo $1) ;
 
-   cat $FILE | tr "\n" "!" > $FILE.temp               #
-   sed -i "s/>/\n/g" $FILE.temp                       # allow to have an entry by line header and sequence are separated by !
+   cat $FILE | tr "\n" "!" > $FILE.temp               
+   sed -i "s/>/\n/g" $FILE.temp                       
    sed -i "s/A/A_/g" $FILE.temp
    sed -i "s/T/T_/g" $FILE.temp
    sed -i "s/G/G_/g" $FILE.temp
