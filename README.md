@@ -1,5 +1,8 @@
 # VIRAL-HTS
+
 This repository contains scripts used for analysis of High-Throughput Sequencing data in study "Blood Virosphere in Febrile Tanzanian Children".
+
+Copyright (C) 2020 Thomas Junier and Florian Laubscher
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
