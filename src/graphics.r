@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-#Purpose: To make an EZVIR-like report from a tsv
+#Purpose: To make report from a tsv
 #Project: SAfia, pipeline "FeVIR"
 #Usage: graphics.r prefix
 
