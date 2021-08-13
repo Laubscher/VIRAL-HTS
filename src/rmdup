@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/home/florian/myTools/cdhit-master/cd-hit-auxtools/cd-hit-dup -i $1_tr_R1_001.fastq -i2 $1_tr_R2_001.fastq -o $1_tr_dup_R1_001.fastq -o2 $1_tr_dup_R2_001.fastq 
+
+bash filter.sh $1

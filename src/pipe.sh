@@ -79,9 +79,23 @@ Black list: $black_list
 Sequences info: $ref
 Colors file: $colors"
 
-bash asign.sh
+##bash asign.sh
+
+> run.log
+
+echo "END=false" >> run.log
+check=$(grep "END=" run.log | cut -d "=" -f2)
+
+while [ $(echo $check) != "true" ] ;
+  do sleep 1m ;
+    echo -n "-";
+    check=$(grep "END=" run.log | cut -d "=" -f2);
+  done;
+
+
+#sed -i "s/END=false/END=true/" run.log
+
 
 #bash filter.sh $1 4 RNA
 #bash paire.sh $1 db/database/ 4 $1
 #python3 metrics.py $1 db/ref.csv  SAFia-HUGv0.2/files/black_list.txt  SAFia-HUGv0.2/files/colors.txt  76
-
