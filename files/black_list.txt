@@ -1,3 +1,5 @@
+AC146851,3000,   #BAC
+AC146904,3000,   #BAC
 KU746283,1200,   #rRNA homology
 KU746280,1200,   #rRNA homology
 NC_032111,500,   #Human homology
@@ -15,5 +17,180 @@ M96687,500,      #ubiquitin mRNA bovin homology
 LT907991,500,    #ubiquitin mRNA bovin homology
 NC_024382,1000,  #lowcomplexity (Alcelaphine gammaherpesvirus 2)
 NC_014567,1000,  #lowcomplexity (Saimiriine herpesvirus 1)
+KY766069,300,    #Human homology
+U86698,300,      #Human homology
+AY208746,300,    #Human homology
 NC_002665,1200,  #Bovin Homology NC_002665:GENE_107313-108635
-AB618031,500,    #LacZ
+M33262,200,
+M37588,200,
+KF478765,200,
+NC_024382,300, #crossSignal with human herpes (Alcelaphine gammaherpesvirus)
+NC_024303,300, #crossSignal with human herpes
+GU934326,300,
+JQ679013,300,
+S57428,300, #lowcomplexity
+AB618031,500, #LacZ
+KM269482,300, #PolyCcc
+M80675,2000, #(email philippe)
+NC_001499,1000,  #oncogène  (~1500-2500)
+AJ279056,10000,  #Porcine type−C oncovirus
+HM131073,10000,  #Porcine type−C oncovirus
+HQ540591,10000,  #Porcine type−C oncovirus
+HQ540595,10000,  #Porcine type−C oncovirus
+NC_003059,10000, #Porcine type−C oncovirus
+AB048602,2000, #Incomplete genome =====     Unclassified SEN virus
+AB048603,2000, #Incomplete genome ===== 	Unclassified SEN virus
+AF500308,2000, #Incomplete genome ===== 	Unclassified SEN virus
+JQ732216,2000, #Incomplete genome ===== 	Unclassified Torque teno virus
+AM712010,2000, #Incomplete genome ===== 	Unclassified Torque teno virus
+HQ677729,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677730,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677731,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677737,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677740,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677741,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677747,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677749,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677750,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677751,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677753,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677754,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677756,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677758,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677760,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677761,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677762,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677763,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+HQ677765,2000, #Incomplete genome ===== 	Unclassified Torque teno midi virus
+AB017775,2000, #Incomplete genome =====	    Unclassified Torque teno virus
+AB017779,2000, #Incomplete genome =====     Unclassified Torque teno virus
+AB017782,2000, #Incomplete genome ===== 	Unclassified Torque teno virus
+AB021082,2000, #Incomplete genome ===== 		Unclassified Torque teno virus
+AB021084,2000, #Incomplete genome ===== 		Unclassified Torque teno virus
+AB021087,2000, #Incomplete genome ===== 		Unclassified Torque teno virus
+AB041822,2000, #Incomplete genome ===== 		Unclassified Torque teno virus
+AJ315406,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AJ315425,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AJ315429,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM711986,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712007,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712017,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712027,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712028,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712029,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712036,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712045,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AY312151,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AY312153,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732205,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732209,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732210,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732211,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732214,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732218,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732219,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732221,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732222,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732232,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+KF545598,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+KP343828,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+KP343831,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712009,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712011,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712013,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712020,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+AM712023,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732217,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732229,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732230,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+KF545592,3000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus	 Incomplete TTMDV (orf1)
+JQ732213,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+JQ732231,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+KP343859,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus
+KP343861,2000,	#Incomplete genome ===== 		Unclassified Torque teno virus	Unclassified Torque teno virus	near complete
+AM711992,2000,  #Incomplete genome TTV
+AM711995,2000,  #Incomplete genome TTV
+AM711996,3000,  #Incomplete genome TTV
+AM711997,2000,  #Incomplete genome TTV
+AM712001,2000,  #Incomplete genome TTV
+AM712008,2000,  #Incomplete genome TTV
+AM712041,2000,  #Incomplete genome TTV
+AM712042,2000,  #Incomplete genome TTV
+AM712043,2000,  #Incomplete genome TTV
+KP343857,3000,  # imcomplet manque debut de l'orf 1 et reverse complement TTV
+AB017911,3000,  #Incomplete genome TTV
+KP343855,3000,  #Incomplete genome TTV
+KP343836,2000,  #Incomplete genome TTV
+KF545581,2000,  # manque le debut de l'orf 1 et la suite du genome TTV
+AB017776,300,   # TTV < 300
+MF536978,500,   #Unclassified Spodoptera frugiperda rhabdovirus # low coverage, Cell line contaminant?
+U43202,10000,	#Murine leukemia virus known contaminants
+S80082,10000,	#Murine leukemia virus known contaminants
+FR872816,10000,	#Murine leukemia virus known contaminants
+FJ544578,10000,	#Murine leukemia virus known contaminants
+AF228551,10000,	#Murine leukemia virus known contaminants
+NC_001500,10000,#Murine leukemia virus known contaminants
+FJ544576,10000,	#Murine leukemia virus known contaminants
+FR871850,10000,	#Murine leukemia virus known contaminants
+JF908815,10000,	#Murine leukemia virus known contaminants
+KU324804,10000,	#Murine leukemia virus known contaminants
+KU324807,10000,	#Murine leukemia virus known contaminants
+KY574517,10000,	#Murine leukemia virus known contaminants
+X57540,10000,	#Murine leukemia virus known contaminants
+HQ154630,10000,	#Murine leukemia virus known contaminants
+NC_001501,10000,#Murine leukemia virus known contaminants
+AB187565,10000,	#Murine leukemia virus known contaminants
+AF411814,10000,	#Murine leukemia virus known contaminants
+AF053745,10000,	#Murine leukemia virus known contaminants
+AY818896,10000,	#Murine leukemia virus known contaminants
+KU324805,10000,	#Murine leukemia virus known contaminants
+KX173421,10000,	#Murine leukemia virus known contaminants
+LC229035,10000,	#Murine leukemia virus known contaminants
+AB764107,10000,	#Murine leukemia virus known contaminants
+HM776937,10000,	#leukemia virus
+KT156670,10000,	#leukemia virus
+KU159177,10000,	#leukemia virus
+KU159180,10000,	#leukemia virus
+KU159181,10000,	#leukemia virus
+KU159182,10000,	#leukemia virus
+KX034517,10000,	#leukemia virus
+KX839489,10000,	#leukemia virus
+KY581580,10000,	#leukemia virus
+AJ238125,10000, #Unclassified Avian endogenous
+AJ292967,10000, #Unclassified Avian endogenous
+JF837512,10000, #Unclassified Avian endogenous
+KF800044,10000, #Unclassified  endogenous
+KF800045,10000, #Unclassified  endogenous
+KY609920,10000, #Unclassified  endogenous
+NC_023153,10000, #Unclassified endogenous
+AJ511660,10000, #Unclassified Human endogenous
+AY208746,10000, #Unclassified Human endogenous
+U86698,10000, #Unclassified Human endogenous
+Y18890,10000, #Unclassified Human endogenous
+Z70664,10000, #Unclassified Human endogenous
+AB705392,10000, #Unclassified Human endogenous
+LC193725,1785, # vector sequences LC193725:GENE_12131-13914     (Equid)
+NC_028249,500, #Phocine morbillivirus crossSignal with CTRL+
+KC757383,3000, #Pestivirus A crossSignal? with CTRL+
+KU563155,3000, #Pestivirus H crossSignal? with CTRL+
+LR584255,10000, #HUMAN
+MK332105,10000, #HUMAN
+NC_019491,10000,
+MK332102,10000,
+JQ612704,10000,
+MH410812,10000,
+MH410814,10000,
+MH410815,10000,
+MH410816,10000,
+KC297709,10000,
+MK332104,10000,
+KY683847,10000,
+X79798,1000,
+JX985409,10000,
+KY767958,10000,
+DQ177346,10000,
+JX469119,10000,
+KY762287,10000,
+KU199244,10000,
+KY618135,10000,
+MG925488,10000,

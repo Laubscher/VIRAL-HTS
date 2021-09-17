@@ -1,15 +1,16 @@
 #!/bin/bash
 TEMPNAME=$1
+echo $TEMPNAME
 CPU=$2
 pathIndex=$3
 pathIndex=/home/florian/myTools/Trimmomatic-0.36/TruSeqNexteraAdaptersAll.fa
 #adapteur
 
- java -jar /home/florian/myTools/Trimmomatic-0.36/trimmomatic-0.36.jar PE -threads $CPU -basein $(echo $TEMPNAME)_R1_001.fastq -baseout $(echo $TEMPNAME).fq ILLUMINACLIP:$pathIndex:1:30:7:1:true MINLEN:65 ;
+ java -jar /home/florian/myTools/Trimmomatic-0.36/trimmomatic-0.36.jar PE -threads $CPU -basein $(echo $TEMPNAME)_R1_001.fastq -baseout  $(echo $TEMPNAME).fq ILLUMINACLIP:$pathIndex:1:30:7:1:true MINLEN:65 ;
 
- mv $(echo $TEMPNAME)_1P.fq $(echo $TEMPNAME)_tr_R1_001.fastq ;
+ mv  $(echo $TEMPNAME)_1P.fq $(echo $TEMPNAME)_tr_R1_001.fastq ;
 
- mv $(echo $TEMPNAME)_2P.fq $(echo $TEMPNAME)_tr_R2_001.fastq ;
+ mv  $(echo $TEMPNAME)_2P.fq $(echo $TEMPNAME)_tr_R2_001.fastq ;
 
 #lowquality
 
@@ -19,4 +20,7 @@ pathIndex=/home/florian/myTools/Trimmomatic-0.36/TruSeqNexteraAdaptersAll.fa
 
  mv $(echo $TEMPNAME)_2P.fq $(echo $TEMPNAME)_tr_R2_001.fastq ;
 
- bash rmdup $1
+ rm $(echo $1)_1U.fq
+ rm $(echo $1)_2U.fq
+
+ bash src/rmdup $1 >> run.log

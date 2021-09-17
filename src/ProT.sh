@@ -28,7 +28,7 @@ for i in $( cat listFaStQ); do
   done
 
   BLASTDB=$2
-  blastx -query scaffold2_$(echo $i).fa -db $BLASTDB -num_threads $1 -evalue 1 -num_descriptions 3 -num_alignments 3 > $(echo $i)_blast.txt 
+  blastx -query scaffold2_$(echo $i).fa -db $BLASTDB -num_threads $1 -evalue 1 -num_descriptions 3 -num_alignments 3 > $(echo $i)_blast.txt
 
   cat $(echo $i)_blast.txt | tr "\n" "\t" > $(echo $i)_blast.txt.temp
 

@@ -40,4 +40,6 @@ rm $(echo $1).bam
 rm $(echo $1).2.bam
 rm $(echo $1).bam.sorted
 
+bash src/paired.sh $1_fl 12
+
 exit 0

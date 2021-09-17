@@ -1,17 +1,20 @@
-#doit lire et recuperer tout les parametres dans pipe.config
-run=$(grep "run=" pipe.config | cut -d"=" -f2)
-reads_length=$(grep "reads_length=" pipe.config | cut -d"=" -f2)
-prescripteur1=$(grep "prescripteur=" pipe.config | cut -d"=" -f2 | cut -d"_" -f1)
-prescripteur2=$(grep "prescripteur=" pipe.config | cut -d"=" -f2 | cut -d"_" -f2)
-type_de_sample=$(grep "type_de_sample=" pipe.config | cut -d"=" -f2)
-bioinf1=$(grep "bioinf=" pipe.config | cut -d"=" -f2 | cut -d"_" -f1)
-bioinf2=$(grep "bioinf=" pipe.config | cut -d"=" -f2 | cut -d"_" -f2)
-dbHuman=$(grep "db_human=" pipe.config | cut -d"=" -f2)
-dbVirus=$(grep "db_virus=" pipe.config | cut -d"=" -f2)
-black_list=$(grep "black_list=" pipe.config | cut -d"=" -f2)
-ref=$(grep "ref=" pipe.config | cut -d"=" -f2)
-colors=$(grep "colors=" pipe.config | cut -d"=" -f2)
-mappeur=$(grep "mappeur=" pipe.config | cut -d"=" -f2)
+#doit lire et recuperer tout les parametres dans $chemin/pipe.config
+chemin=${1%/*}
+prefix=${1##*/}
+echo "working dir: " $chemin
+run=$(grep "run=" $chemin/pipe.config | cut -d"=" -f2)
+reads_length=$(grep "reads_length=" $chemin/pipe.config | cut -d"=" -f2)
+prescripteur1=$(grep "prescripteur=" $chemin/pipe.config | cut -d"=" -f2 | cut -d"_" -f1)
+prescripteur2=$(grep "prescripteur=" $chemin/pipe.config | cut -d"=" -f2 | cut -d"_" -f2)
+type_de_sample=$(grep "type_de_sample=" $chemin/pipe.config | cut -d"=" -f2)
+bioinf1=$(grep "bioinf=" $chemin/pipe.config | cut -d"=" -f2 | cut -d"_" -f1)
+bioinf2=$(grep "bioinf=" $chemin/pipe.config | cut -d"=" -f2 | cut -d"_" -f2)
+dbHuman=$(grep "db_human=" $chemin/pipe.config | cut -d"=" -f2)
+dbVirus=$(grep "db_virus=" $chemin/pipe.config | cut -d"=" -f2)
+black_list=$(grep "black_list=" $chemin/pipe.config | cut -d"=" -f2)
+ref=$(grep "ref=" $chemin/pipe.config | cut -d"=" -f2)
+colors=$(grep "colors=" $chemin/pipe.config | cut -d"=" -f2)
+mappeur=$(grep "mappeur=" $chemin/pipe.config | cut -d"=" -f2)
 
 if [ -z "$run" ]; then
 
@@ -83,19 +86,41 @@ Colors file: $colors"
 
 > run.log
 
-echo "END=false" >> run.log
-check=$(grep "END=" run.log | cut -d "=" -f2)
+#echo "END=false" >> run.log
+#check=$(grep "END=" run.log | cut -d "=" -f2)
 
-while [ $(echo $check) != "true" ] ;
-  do sleep 1m ;
-    echo -n "-";
-    check=$(grep "END=" run.log | cut -d "=" -f2);
-  done;
+#while [ $(echo $check) != "true" ] ;
+#  do sleep 1m ;
+#    echo -n "-";
+#    check=$(grep "END=" run.log | cut -d "=" -f2);
+#  done;
 
+# bash map  contre cdv  &
 
-#sed -i "s/END=false/END=true/" run.log
+echo "_________________"
+adapteur=/home/florian/myTools/Trimmomatic-0.36/TruSeqNexteraAdaptersAll.fa
 
+bash src/paired.sh $1 db/NC_001921/ 1  $chemin/CDV_$prefix >> run.log 2>> run.log  &
 
-#bash filter.sh $1 4 RNA
-#bash paire.sh $1 db/database/ 4 $1
-#python3 metrics.py $1 db/ref.csv  SAFia-HUGv0.2/files/black_list.txt  SAFia-HUGv0.2/files/colors.txt  76
+bash src/adaptr $1 10 $adapteur >> run.log 2>> run.log  &
+
+wait
+
+echo "Reads filtrées"
+
+#lancer le denovo en parallele
+bash src/Pro.sh 1 /home/florian/Documents/VIRAL-HTS-1/denovo/db_/Viral_protein_database/C063gt100-RVDBv12.2-prot.fasta $prefix $chemin >> run.log 2>> run.log &
+
+echo "Denovo lancé en parallele"
+
+python3 src/metrics.py $chemin/CDV_$prefix db/NC_001921/ref.csv  SAFia-HUGv0.2/files/black_list.txt  SAFia-HUGv0.2/files/colors.txt  76
+
+echo "map contre virosaurus"
+
+bash src/paired.sh $1_tr_dup_fl db/database/ 10  $chemin/$prefix >> run.log 2>> run.log
+
+python3 src/metrics.py $1 db/ref.csv  SAFia-HUGv0.2/files/black_list.txt  SAFia-HUGv0.2/files/colors.txt  76
+echo "generation du rapport"
+bash src/mkMd.sh $1 $chemin $prefix
+
+echo "end"

@@ -8,10 +8,11 @@ echo "Arguments are missing"
 fi
 
 DB=$3   #PATH to database
+DB=db/RNA38
 DISPLAY="GRChXX_pXX genome"
 
 if [ -z "$2" ]; then
-CPU=8
+CPU=12
 else
 CPU=$2
 fi
@@ -40,5 +41,7 @@ samtools fastq -1 $1_fl_R1_001.fastq -2 $1_fl_R2_001.fastq -0 /dev/null -s /dev/
 rm $(echo $1).bam
 rm $(echo $1).2.bam
 rm $(echo $1).bam.sorted
+
+
 
 exit 0
