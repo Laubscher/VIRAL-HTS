@@ -101,6 +101,8 @@ if ((${#MODULES_TO_LOAD[@]})); then
 fi
 
 ADAPTERS_FASTA_SE="${ADAPTERS_FASTA_SE:-$ADAPTERS_FASTA}"
+SNAP_USE_HUGE_PAGES="${SNAP_USE_HUGE_PAGES:-0}"
+[[ "$SNAP_USE_HUGE_PAGES" =~ ^[01]$ ]] || die "SNAP_USE_HUGE_PAGES must be 0 or 1"
 THREADS="${THREADS:-$DEFAULT_THREADS}"
 READ_LENGTH="${READ_LENGTH:-$DEFAULT_READ_LENGTH}"
 [[ "$THREADS" =~ ^[1-9][0-9]*$ ]] || die "Threads must be a positive integer"
@@ -109,7 +111,7 @@ READ_LENGTH="${READ_LENGTH:-$DEFAULT_READ_LENGTH}"
 SKIP_DENOVO=1
 
 export ROOT_DIR CONFIG SAMPLE R1 R2 OUTPUT_ROOT THREADS READ_LENGTH KEEP_INTERMEDIATE
-export READ_LAYOUT SKIP_DENOVO ADAPTERS_FASTA_SE
+export READ_LAYOUT SKIP_DENOVO ADAPTERS_FASTA_SE SNAP_USE_HUGE_PAGES
 export JAVA_BIN TRIMMOMATIC_JAR CD_HIT_DUP SNAP_ALIGNER SAMTOOLS MINIMAP2 BEDTOOLS
 export PYTHON ADAPTERS_FASTA HUMAN_GENOME_DB
 export HUMAN_TRANSCRIPTOME_DB HUMAN_EXTRA_DB VIROSAURUS_FASTA VIROSAURUS_METADATA
@@ -126,12 +128,12 @@ log "Starting FEVIR analysis for $SAMPLE"
 log "Read layout: $READ_LAYOUT"
 log "Output: $SAMPLE_DIR"
 
-bash "$ROOT_DIR/bin/check_dependencies.sh"
+bash "$ROOT_DIR/lib/check_dependencies.sh"
 bash "$ROOT_DIR/steps/01_preprocess.sh"
 bash "$ROOT_DIR/steps/02_host_depletion.sh"
 bash "$ROOT_DIR/steps/03_reference_detection.sh"
 log "De novo assembly and BLASTx disabled in this version"
-bash "$ROOT_DIR/bin/write_manifest.sh"
+bash "$ROOT_DIR/lib/write_manifest.sh"
 
 if [[ "$KEEP_INTERMEDIATE" -eq 0 ]]; then
     log "Removing disposable intermediate files"
