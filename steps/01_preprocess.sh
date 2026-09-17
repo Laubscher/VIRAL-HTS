@@ -64,7 +64,7 @@ else
     "$CD_HIT_DUP" -i "$QUALITY_R1" -o "$DEDUP_R1"
 fi
 
-"$PYTHON" "$ROOT_DIR/bin/fastq_stats.py" \
+"$PYTHON" "$ROOT_DIR/lib/fastq_stats.py" \
     --raw-r1 "$RAW_R1" \
     --trimmed-r1 "$QUALITY_R1" \
     --deduplicated-r1 "$DEDUP_R1" \

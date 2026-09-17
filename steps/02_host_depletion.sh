@@ -5,6 +5,8 @@ source "$ROOT_DIR/lib/common.sh"
 
 WORK="$SAMPLE_DIR/work/02_host_depletion"
 RESULTS="$SAMPLE_DIR/results/reads"
+SNAP_ARGS=()
+if [[ "${SNAP_USE_HUGE_PAGES:-0}" -eq 1 ]]; then SNAP_ARGS+=(-hp); fi
 mkdir -p "$WORK" "$RESULTS"
 
 INPUT_R1="$(<"$SAMPLE_DIR/work/preprocessed_r1.path")"
@@ -33,14 +35,14 @@ deplete_database() {
     log "Host depletion: mapping against $label"
     if [[ "$READ_LAYOUT" == single ]]; then
         "$SNAP_ALIGNER" single "$database" "$input_r1" \
-            -t "$THREADS" -d 16 -hp -f -x -E u -mrl 50 -o "$bam"
+            -t "$THREADS" -d 16 "${SNAP_ARGS[@]}" -f -x -E u -mrl 50 -o "$bam"
         "$SAMTOOLS" view -uh -f 0x04 -o "$unmapped" "$bam"
 
         "$SAMTOOLS" fastq -n "$unmapped" > "$output_r1"
         return
     fi
     "$SNAP_ALIGNER" paired "$database" "$input_r1" "$input_r2" \
-        -t "$THREADS" -d 16 -hp -f -x -E u -F b -mrl 50 -o "$bam"
+        -t "$THREADS" -d 16 "${SNAP_ARGS[@]}" -f -x -E u -F b -mrl 50 -o "$bam"
 
 
     "$SAMTOOLS" view -uh -f 0x04 -o "$unmapped" "$bam"
@@ -71,7 +73,7 @@ else
     gzip -c "$FINAL_R1" > "$RESULTS/${SAMPLE}.filtered.SE.fastq.gz"
 fi
 
-"$PYTHON" "$ROOT_DIR/bin/append_host_stats.py" \
+"$PYTHON" "$ROOT_DIR/lib/append_host_stats.py" \
     --stats "$SAMPLE_DIR/results/preprocessing_stats.tsv" \
     --deduplicated-r1 "$INPUT_R1" \
     --host-depleted-r1 "$FINAL_R1" \
