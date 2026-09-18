@@ -11,6 +11,10 @@ SAMTOOLS="samtools"
 MINIMAP2="$FEVIR_DIR/bin/minimap2"
 BEDTOOLS="bedtools"
 PYTHON="python3"
+FQ2FA="$FEVIR_DIR/bin/fq2fa"
+IDBA_UD="$FEVIR_DIR/bin/idba_ud"
+BLASTX="blastx"
+BLASTDBCMD="blastdbcmd"
 
 FEVIR_MODULES=()
 SNAP_USE_HUGE_PAGES=0
@@ -26,6 +30,7 @@ HUMAN_TRANSCRIPTOME_DB="$FEVIR_DIR/db/moreHuman"
 HUMAN_EXTRA_DB="$FEVIR_DIR/db/moreHuman"
 VIROSAURUS_FASTA="$FEVIR_DIR/db/virosaurus2023/Virosaurus2023.fasta"
 VIROSAURUS_METADATA="$FEVIR_DIR/db/virosaurus2023/ref.txt"
+RVDB_PROTEIN_DB="$FEVIR_DIR/db/rvdb/C063gt100-RVDBv12.2-prot.fasta"
 
 # Optional accession-specific minimum covered-nucleotide thresholds.
 # Format: accession<TAB>minimum_covered_nt
@@ -35,3 +40,10 @@ ACCESSION_THRESHOLDS=""
 # Defaults 75-bp workflow.
 DEFAULT_THREADS=20
 DEFAULT_READ_LENGTH=75
+MIN_CONTIG_LENGTH=1000
+LONG_CONTIG_LENGTH=40000
+BLAST_EVALUE=1
+BLAST_MAX_TARGETS=3
+IDBA_MINK=21
+IDBA_MAXK=75
+IDBA_STEP=20

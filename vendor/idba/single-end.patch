@@ -1,0 +1,146 @@
+--- a/src/release/idba_ud.cpp
++++ b/src/release/idba_ud.cpp
+@@ -62,6 +62,8 @@
+     bool is_no_coverage;
+     bool is_no_correct;
+     bool is_pre_correction;
++    bool is_single;
++    bool show_version;
+     string reference;
+ 
+     IDBAOption()
+@@ -88,6 +90,8 @@
+         is_no_coverage = false;
+         is_no_correct = false;
+         is_pre_correction = false;
++        is_single = false;
++        show_version = false;
+     }
+ 
+     string log_file()
+@@ -134,7 +138,7 @@
+ void LocalAssembly(int kmer_size, int new_kmer_size);
+ void Iterate(int kmer_size, int new_kmer_size);
+ void Scaffold(int kmer_size, int min_contig);
+-void AddPairs(int level, ScaffoldGraph &scaffold_graph, const string &read_file, const string &align_file);
++bool AddPairs(int level, ScaffoldGraph &scaffold_graph, const string &read_file, const string &align_file);
+ void AlignReads(const string &contig_file, ShortReadLibrary &library, const string &align_file);
+ 
+ int main(int argc, char *argv[])
+@@ -169,10 +173,27 @@
+     desc.AddOption("no_coverage", "", option.is_no_coverage, "do not iterate on coverage");
+     desc.AddOption("no_correct", "", option.is_no_correct, "do not do correction");
+     desc.AddOption("pre_correction", "", option.is_pre_correction, "perform pre-correction before assembly");
++    desc.AddOption("single", "", option.is_single, "single-end reads; no paired local assembly or scaffolding");
++    desc.AddOption("version", "", option.show_version, "print version");
+ 
+     try
+     {
+         desc.Parse(argc, argv);
++
++        if (option.show_version)
++        {
++            cout << "IDBA-UD 1.1.3 (FEVIR single-end patch)" << endl;
++            return 0;
++        }
++
++        if (option.is_single)
++        {
++            if (option.read_file.empty() || !option.long_read_file.empty())
++                throw invalid_argument("--single requires -r and does not accept -l");
++            for (unsigned i = 0; i < option.extra_read_files.size(); ++i)
++                if (!option.extra_read_files[i].empty())
++                    throw invalid_argument("--single does not accept paired scaffolding libraries");
++        }
+ 
+         if (option.read_file == "" && option.long_read_file == "")
+             throw logic_error("not enough parameters");
+@@ -280,7 +301,8 @@
+             writer.Write(contigs[i], names[i]);
+     }
+ 
+-    Scaffold(option.maxk, option.min_contig);
++    if (!option.is_single)
++        Scaffold(option.maxk, option.min_contig);
+ 
+     string end_file = option.directory + "/end";
+     fclose(OpenFile(end_file, "wb"));
+@@ -402,6 +424,12 @@
+ 
+ void LocalAssembly(int kmer_size, int new_kmer_size)
+ {
++    if (option.is_single)
++    {
++        deque<Sequence> local_contigs;
++        WriteSequence(option.local_contig_file(kmer_size), local_contigs);
++        return;
++    }
+     //if (median == 0)
+         //EstimateDistance(kmer_size);
+     EstimateDistance(option.align_file(kmer_size), median, sd);
+@@ -517,11 +545,17 @@
+             read_files.push_back(option.extra_read_files[i]);
+     }
+ 
++    vector<bool> valid_libraries(read_files.size(), false);
+     for (int level = 0; level < (int)read_files.size(); ++level)
+-        AddPairs(level, scaffold_graph, read_files[level], option.align_file(option.maxk) + FormatString("-%d", level));
++        valid_libraries[level] = AddPairs(level, scaffold_graph, read_files[level], option.align_file(option.maxk) + FormatString("-%d", level));
+ 
+     for (int level = 0; level < (int)read_files.size(); ++level)
+     {
++        if (!valid_libraries[level])
++        {
++            cout << "scaffolding skipped: invalid insert distance for library " << level << endl;
++            continue;
++        }
+         scaffold_graph.BuildEdges();
+         scaffold_graph.FilterEdges(option.min_pairs, scaffold_graph.sd(level) * 4);
+         scaffold_graph.ParseEdges();
+@@ -542,7 +576,7 @@
+     }
+ }
+ 
+-void AddPairs(int level, ScaffoldGraph &scaffold_graph, const string &read_file, const string &align_file)
++bool AddPairs(int level, ScaffoldGraph &scaffold_graph, const string &read_file, const string &align_file)
+ {
+     ShortReadLibrary short_read_library;
+     ReadLibrary(read_file, short_read_library);
+@@ -553,7 +587,7 @@
+     if (median < 0 || median != median || sd != sd || sd > 2*median)
+     {
+         cout << "invalid insert distance" << endl;
+-        return;
++        return false;
+     }
+ 
+     deque<Sequence> contigs;
+@@ -635,6 +669,7 @@
+     }
+ 
+     scaffold_graph.set_library_info(level, read_length, mean_coverage, median, sd);
++    return true;
+ }
+ 
+ void AlignReads(const string &contig_file, ShortReadLibrary &library, const string &align_file)
+@@ -651,4 +686,3 @@
+ 
+     assembly_info.reads.swap(library.reads());
+ }
+-
+--- a/src/sequence/short_sequence.h
++++ b/src/sequence/short_sequence.h
+@@ -99,7 +99,7 @@
+         return size() < seq.size();
+     }
+ 
+-    static const uint32_t kMaxShortSequence = 128;
++    static const uint32_t kMaxShortSequence = 500;
+     static const uint32_t kNumBytes = (kMaxShortSequence + 3) / 4 + 2;
+ 
+ private:
+@@ -113,4 +113,3 @@
+ }
+ 
+ #endif
+-

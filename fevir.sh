@@ -10,7 +10,7 @@ Usage:
   fevir.sh -1 reads_R1.fastq[.gz] -2 reads_R2.fastq[.gz] -s SAMPLE [options]
   fevir.sh -U reads.fastq[.gz] -s SAMPLE [options]
 
-This edition runs preprocessing and reference detection only (no de novo/BLASTx).
+Preprocessing, reference detection, IDBA-UD assembly and RVDB-prot BLASTx.
 
 Input (choose one layout):
   -1 FILE      Paired-end Illumina R1 FASTQ (requires -2)
@@ -26,7 +26,7 @@ Options:
   -t INT       Threads (default from configuration)
   -l INT       Original read length (default from configuration)
   -k           Keep intermediate files
-  -D           Accepted for compatibility; de novo is always disabled in this edition
+  -D           Skip de novo assembly and BLASTx
   -h           Show this help
 EOF
 }
@@ -34,7 +34,7 @@ EOF
 R1=""
 R2=""
 SINGLE_READS=""
-SKIP_DENOVO=1
+SKIP_DENOVO=0
 SAMPLE=""
 OUTPUT_ROOT="$PWD/fevir_output"
 CONFIG="$ROOT_DIR/config/config.sh"
@@ -86,12 +86,37 @@ CONFIG="$(absolute_path "$CONFIG")"
 mkdir -p "$OUTPUT_ROOT"
 OUTPUT_ROOT="$(cd -- "$OUTPUT_ROOT" && pwd)"
 
+CLI_SKIP_DENOVO="$SKIP_DENOVO"
 # shellcheck source=/dev/null
 source "$CONFIG"
+SKIP_DENOVO="$CLI_SKIP_DENOVO"
+
+FQ2FA="${FQ2FA:-$ROOT_DIR/bin/fq2fa}"
+IDBA_UD="${IDBA_UD:-$ROOT_DIR/bin/idba_ud}"
+BLASTX="${BLASTX:-blastx}"
+BLASTDBCMD="${BLASTDBCMD:-blastdbcmd}"
+RVDB_PROTEIN_DB="${RVDB_PROTEIN_DB:-$ROOT_DIR/db/rvdb/C063gt100-RVDBv12.2-prot.fasta}"
+MIN_CONTIG_LENGTH="${MIN_CONTIG_LENGTH:-1000}"
+LONG_CONTIG_LENGTH="${LONG_CONTIG_LENGTH:-40000}"
+BLAST_EVALUE="${BLAST_EVALUE:-1}"
+BLAST_MAX_TARGETS="${BLAST_MAX_TARGETS:-3}"
+IDBA_MINK="${IDBA_MINK:-21}"
+IDBA_MAXK="${IDBA_MAXK:-75}"
+IDBA_STEP="${IDBA_STEP:-20}"
 
 MODULES_TO_LOAD=()
 if declare -p FEVIR_MODULES >/dev/null 2>&1; then
     MODULES_TO_LOAD+=("${FEVIR_MODULES[@]}")
+fi
+if [[ "$SKIP_DENOVO" -eq 0 ]]; then
+    if declare -p FEVIR_DENOVO_MODULES >/dev/null 2>&1; then
+        MODULES_TO_LOAD+=("${FEVIR_DENOVO_MODULES[@]}")
+    fi
+    if [[ "$READ_LAYOUT" == paired ]] && declare -p FEVIR_DENOVO_PAIRED_MODULES >/dev/null 2>&1; then
+        MODULES_TO_LOAD+=("${FEVIR_DENOVO_PAIRED_MODULES[@]}")
+    elif [[ "$READ_LAYOUT" == single ]] && declare -p FEVIR_DENOVO_SINGLE_MODULES >/dev/null 2>&1; then
+        MODULES_TO_LOAD+=("${FEVIR_DENOVO_SINGLE_MODULES[@]}")
+    fi
 fi
 if ((${#MODULES_TO_LOAD[@]})); then
     command -v module >/dev/null 2>&1 || die "Environment modules are configured, but 'module' is unavailable"
@@ -108,7 +133,15 @@ READ_LENGTH="${READ_LENGTH:-$DEFAULT_READ_LENGTH}"
 [[ "$THREADS" =~ ^[1-9][0-9]*$ ]] || die "Threads must be a positive integer"
 [[ "$READ_LENGTH" =~ ^[1-9][0-9]*$ ]] || die "Read length must be a positive integer"
 
-SKIP_DENOVO=1
+if [[ "$SKIP_DENOVO" -eq 0 ]]; then
+    for parameter in MIN_CONTIG_LENGTH LONG_CONTIG_LENGTH BLAST_MAX_TARGETS IDBA_MINK IDBA_MAXK IDBA_STEP; do
+        [[ "${!parameter}" =~ ^[1-9][0-9]*$ ]] || die "$parameter must be a positive integer"
+    done
+    (( IDBA_MINK <= IDBA_MAXK && IDBA_MAXK <= 124 )) || die "Require IDBA_MINK <= IDBA_MAXK <= 124"
+    (( LONG_CONTIG_LENGTH >= MIN_CONTIG_LENGTH )) || die "LONG_CONTIG_LENGTH must be >= MIN_CONTIG_LENGTH"
+    "$PYTHON" -c 'import math, sys; x=float(sys.argv[1]); sys.exit(not (math.isfinite(x) and x>0))' \
+        "$BLAST_EVALUE" || die "BLAST_EVALUE must be a finite positive number"
+fi
 
 export ROOT_DIR CONFIG SAMPLE R1 R2 OUTPUT_ROOT THREADS READ_LENGTH KEEP_INTERMEDIATE
 export READ_LAYOUT SKIP_DENOVO ADAPTERS_FASTA_SE SNAP_USE_HUGE_PAGES
@@ -116,6 +149,9 @@ export JAVA_BIN TRIMMOMATIC_JAR CD_HIT_DUP SNAP_ALIGNER SAMTOOLS MINIMAP2 BEDTOO
 export PYTHON ADAPTERS_FASTA HUMAN_GENOME_DB
 export HUMAN_TRANSCRIPTOME_DB HUMAN_EXTRA_DB VIROSAURUS_FASTA VIROSAURUS_METADATA
 export ACCESSION_THRESHOLDS
+export FQ2FA IDBA_UD BLASTX BLASTDBCMD RVDB_PROTEIN_DB
+export MIN_CONTIG_LENGTH LONG_CONTIG_LENGTH BLAST_EVALUE BLAST_MAX_TARGETS
+export IDBA_MINK IDBA_MAXK IDBA_STEP
 
 SAMPLE_DIR="$OUTPUT_ROOT/$SAMPLE"
 export SAMPLE_DIR
@@ -132,7 +168,11 @@ bash "$ROOT_DIR/lib/check_dependencies.sh"
 bash "$ROOT_DIR/steps/01_preprocess.sh"
 bash "$ROOT_DIR/steps/02_host_depletion.sh"
 bash "$ROOT_DIR/steps/03_reference_detection.sh"
-log "De novo assembly and BLASTx disabled in this version"
+if [[ "$SKIP_DENOVO" -eq 0 ]]; then
+    bash "$ROOT_DIR/steps/04_denovo.sh"
+else
+    log "De novo assembly and BLASTx skipped (-D)"
+fi
 bash "$ROOT_DIR/lib/write_manifest.sh"
 
 if [[ "$KEEP_INTERMEDIATE" -eq 0 ]]; then

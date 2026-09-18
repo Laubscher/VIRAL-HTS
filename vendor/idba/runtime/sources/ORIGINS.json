@@ -1,0 +1,31 @@
+{
+  "source_package": "glibc",
+  "version": "2.39-0ubuntu8.6",
+  "source_publication": "https://api.launchpad.net/1.0/ubuntu/+archive/primary/+sourcepub/17601625",
+  "files": [
+    {
+      "name": "glibc_2.39-0ubuntu8.6.dsc",
+      "size": 9387,
+      "sha256": "e2efb9f2671cb499824faa481a6f10e53ade6ea190d1a2aed4089112d7cd5f6a",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/glibc/2.39-0ubuntu8.6/glibc_2.39-0ubuntu8.6.dsc"
+    },
+    {
+      "name": "glibc_2.39-0ubuntu8.6.debian.tar.xz",
+      "size": 467000,
+      "sha256": "257ba238aed36ffc4016493f0bea10ebc851e56135ba5b39117af8b914c76892",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/glibc/2.39-0ubuntu8.6/glibc_2.39-0ubuntu8.6.debian.tar.xz"
+    },
+    {
+      "name": "glibc_2.39.orig.tar.xz",
+      "size": 18520988,
+      "sha256": "f77bd47cf8170c57365ae7bf86696c118adb3b120d3259c64c502d3dc1e2d926",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/glibc/2.39-0ubuntu8.6/glibc_2.39.orig.tar.xz"
+    },
+    {
+      "name": "glibc_2.39.orig.tar.xz.asc",
+      "size": 833,
+      "sha256": "2cce427ef7933c17379f5514e4f0ccf8dffae5bf8c72f0f7e0bf8b8401f34be5",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/glibc/2.39-0ubuntu8.6/glibc_2.39.orig.tar.xz.asc"
+    }
+  ]
+}

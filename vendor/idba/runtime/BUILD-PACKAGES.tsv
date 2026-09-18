@@ -1,0 +1,7 @@
+package	version	source_package	source_version
+g++-13	13.3.0-6ubuntu2~24.04	gcc-13	13.3.0-6ubuntu2~24.04
+gcc-13	13.3.0-6ubuntu2~24.04	gcc-13	13.3.0-6ubuntu2~24.04
+libc6:amd64	2.39-0ubuntu8.6	glibc	2.39-0ubuntu8.6
+libc6-dev:amd64	2.39-0ubuntu8.6	glibc	2.39-0ubuntu8.6
+libgcc-13-dev:amd64	13.3.0-6ubuntu2~24.04	gcc-13	13.3.0-6ubuntu2~24.04
+libstdc++-13-dev:amd64	13.3.0-6ubuntu2~24.04	gcc-13	13.3.0-6ubuntu2~24.04
