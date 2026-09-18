@@ -3,24 +3,43 @@ set -euo pipefail
 
 source "$ROOT_DIR/lib/common.sh"
 
-for program in "$JAVA_BIN" "$CD_HIT_DUP" "$SNAP_ALIGNER" "$SAMTOOLS" \
-               "$MINIMAP2" "$BEDTOOLS" "$PYTHON"; do
+for program in "$SAMTOOLS" "$MINIMAP2" "$BEDTOOLS" "$PYTHON"; do
     require_program "$program"
 done
 
-ADAPTER_FILE="$ADAPTERS_FASTA"
-[[ "$READ_LAYOUT" != single ]] || ADAPTER_FILE="$ADAPTERS_FASTA_SE"
-for file in "$TRIMMOMATIC_JAR" "$ADAPTER_FILE" "$VIROSAURUS_FASTA" \
-            "$VIROSAURUS_METADATA"; do
+for file in "$VIROSAURUS_FASTA" "$VIROSAURUS_METADATA"; do
     require_file "$file"
 done
 
-for database in "$HUMAN_GENOME_DB" "$HUMAN_TRANSCRIPTOME_DB" "$HUMAN_EXTRA_DB"; do
-    require_path "$database"
-done
+if [[ "${SKIP_PREPROCESSING:-0}" -eq 0 ]]; then
+    for program in "$JAVA_BIN" "$CD_HIT_DUP" "$SNAP_ALIGNER"; do
+        require_program "$program"
+    done
+    ADAPTER_FILE="$ADAPTERS_FASTA"
+    [[ "$READ_LAYOUT" != single ]] || ADAPTER_FILE="$ADAPTERS_FASTA_SE"
+    for file in "$TRIMMOMATIC_JAR" "$ADAPTER_FILE"; do
+        require_file "$file"
+    done
+    for database in "$HUMAN_GENOME_DB" "$HUMAN_TRANSCRIPTOME_DB" "$HUMAN_EXTRA_DB"; do
+        require_path "$database"
+    done
+fi
 
 if [[ -n "$ACCESSION_THRESHOLDS" ]]; then
     require_file "$ACCESSION_THRESHOLDS"
+fi
+
+if [[ "$SKIP_DENOVO" -eq 0 ]]; then
+    for program in "$FQ2FA" "$IDBA_UD" "$BLASTX" "$BLASTDBCMD"; do
+        require_program "$program"
+    done
+    if [[ "$READ_LAYOUT" == single ]]; then
+        IDBA_HELP="$("$IDBA_UD" 2>&1 || true)"
+        [[ "$IDBA_HELP" == *"--single"* ]] || die "Single-end requires the supplied IDBA-UD with --single support: $IDBA_UD"
+    fi
+    "$BLASTDBCMD" -db "\"$RVDB_PROTEIN_DB\"" -dbtype prot -info \
+        > "$SAMPLE_DIR/logs/rvdb.info.txt" \
+        || die "Cannot open the indexed protein BLAST database: $RVDB_PROTEIN_DB"
 fi
 
 log "Dependencies and reference paths checked"

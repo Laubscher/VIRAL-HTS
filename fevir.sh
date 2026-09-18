@@ -26,6 +26,7 @@ Options:
   -t INT       Threads (default from configuration)
   -l INT       Original read length (default from configuration)
   -k           Keep intermediate files
+  -P           Skip trimming, deduplication and host depletion
   -D           Skip de novo assembly and BLASTx
   -h           Show this help
 EOF
@@ -34,6 +35,7 @@ EOF
 R1=""
 R2=""
 SINGLE_READS=""
+SKIP_PREPROCESSING=0
 SKIP_DENOVO=0
 SAMPLE=""
 OUTPUT_ROOT="$PWD/fevir_output"
@@ -42,7 +44,7 @@ THREADS=""
 READ_LENGTH=""
 KEEP_INTERMEDIATE=0
 
-while getopts ':1:2:U:s:o:c:t:l:kDh' option; do
+while getopts ':1:2:U:s:o:c:t:l:kPDh' option; do
     case "$option" in
         1) R1="$OPTARG" ;;
         2) R2="$OPTARG" ;;
@@ -53,6 +55,7 @@ while getopts ':1:2:U:s:o:c:t:l:kDh' option; do
         t) THREADS="$OPTARG" ;;
         l) READ_LENGTH="$OPTARG" ;;
         k) KEEP_INTERMEDIATE=1 ;;
+        P) SKIP_PREPROCESSING=1 ;;
         D) SKIP_DENOVO=1 ;;
         h) usage; exit 0 ;;
         :) die "Option -$OPTARG requires a value" ;;
@@ -87,9 +90,11 @@ mkdir -p "$OUTPUT_ROOT"
 OUTPUT_ROOT="$(cd -- "$OUTPUT_ROOT" && pwd)"
 
 CLI_SKIP_DENOVO="$SKIP_DENOVO"
+CLI_SKIP_PREPROCESSING="$SKIP_PREPROCESSING"
 # shellcheck source=/dev/null
 source "$CONFIG"
 SKIP_DENOVO="$CLI_SKIP_DENOVO"
+SKIP_PREPROCESSING="$CLI_SKIP_PREPROCESSING"
 
 FQ2FA="${FQ2FA:-$ROOT_DIR/bin/fq2fa}"
 IDBA_UD="${IDBA_UD:-$ROOT_DIR/bin/idba_ud}"
@@ -125,9 +130,11 @@ if ((${#MODULES_TO_LOAD[@]})); then
     done
 fi
 
-ADAPTERS_FASTA_SE="${ADAPTERS_FASTA_SE:-$ADAPTERS_FASTA}"
+ADAPTERS_FASTA_SE="${ADAPTERS_FASTA_SE:-${ADAPTERS_FASTA:-}}"
 SNAP_USE_HUGE_PAGES="${SNAP_USE_HUGE_PAGES:-0}"
-[[ "$SNAP_USE_HUGE_PAGES" =~ ^[01]$ ]] || die "SNAP_USE_HUGE_PAGES must be 0 or 1"
+if [[ "$SKIP_PREPROCESSING" -eq 0 ]]; then
+    [[ "$SNAP_USE_HUGE_PAGES" =~ ^[01]$ ]] || die "SNAP_USE_HUGE_PAGES must be 0 or 1"
+fi
 THREADS="${THREADS:-$DEFAULT_THREADS}"
 READ_LENGTH="${READ_LENGTH:-$DEFAULT_READ_LENGTH}"
 [[ "$THREADS" =~ ^[1-9][0-9]*$ ]] || die "Threads must be a positive integer"
@@ -144,7 +151,7 @@ if [[ "$SKIP_DENOVO" -eq 0 ]]; then
 fi
 
 export ROOT_DIR CONFIG SAMPLE R1 R2 OUTPUT_ROOT THREADS READ_LENGTH KEEP_INTERMEDIATE
-export READ_LAYOUT SKIP_DENOVO ADAPTERS_FASTA_SE SNAP_USE_HUGE_PAGES
+export READ_LAYOUT SKIP_PREPROCESSING SKIP_DENOVO ADAPTERS_FASTA_SE SNAP_USE_HUGE_PAGES
 export JAVA_BIN TRIMMOMATIC_JAR CD_HIT_DUP SNAP_ALIGNER SAMTOOLS MINIMAP2 BEDTOOLS
 export PYTHON ADAPTERS_FASTA HUMAN_GENOME_DB
 export HUMAN_TRANSCRIPTOME_DB HUMAN_EXTRA_DB VIROSAURUS_FASTA VIROSAURUS_METADATA
@@ -165,8 +172,12 @@ log "Read layout: $READ_LAYOUT"
 log "Output: $SAMPLE_DIR"
 
 bash "$ROOT_DIR/lib/check_dependencies.sh"
-bash "$ROOT_DIR/steps/01_preprocess.sh"
-bash "$ROOT_DIR/steps/02_host_depletion.sh"
+if [[ "$SKIP_PREPROCESSING" -eq 1 ]]; then
+    bash "$ROOT_DIR/lib/prepare_input_reads.sh"
+else
+    bash "$ROOT_DIR/steps/01_preprocess.sh"
+    bash "$ROOT_DIR/steps/02_host_depletion.sh"
+fi
 bash "$ROOT_DIR/steps/03_reference_detection.sh"
 if [[ "$SKIP_DENOVO" -eq 0 ]]; then
     bash "$ROOT_DIR/steps/04_denovo.sh"
