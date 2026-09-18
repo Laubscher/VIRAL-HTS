@@ -20,8 +20,9 @@ ADAPTERS_FASTA="$FEVIR_DIR/db/fasta/TruSeqNexteraAdaptersAll.fa"
 # Optional single-end adapter file. Empty uses ADAPTERS_FASTA.
 ADAPTERS_FASTA_SE=""
 #HUMAN_GENOME_DB="$FEVIR_DIR/db/GRCh38_p14_genome" 
-HUMAN_GENOME_DB="$FEVIR_DIR/db/gencode_v43_transcripts" # for local test
-HUMAN_TRANSCRIPTOME_DB="$FEVIR_DIR/db/gencode_v43_transcripts"
+HUMAN_GENOME_DB="$FEVIR_DIR/db/moreHuman" # for local test
+#HUMAN_TRANSCRIPTOME_DB="$FEVIR_DIR/db/gencode_v43_transcripts"
+HUMAN_TRANSCRIPTOME_DB="$FEVIR_DIR/db/moreHuman"
 HUMAN_EXTRA_DB="$FEVIR_DIR/db/moreHuman"
 VIROSAURUS_FASTA="$FEVIR_DIR/db/virosaurus2023/Virosaurus2023.fasta"
 VIROSAURUS_METADATA="$FEVIR_DIR/db/virosaurus2023/ref.txt"
