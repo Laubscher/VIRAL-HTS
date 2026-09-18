@@ -1,0 +1,29 @@
+IDBA-UD 1.1.3 / fq2fa — adaptation FEVIR du 18 septembre 2026
+
+Copyright original : Copyright (C) 2009 Yu Peng (loneknightpy@gmail.com).
+Projet original : https://github.com/loneknightpy/idba/tree/1.1.3
+
+IDBA et les modifications FEVIR sont distribués sous la GNU General Public
+License version 2 ou, à votre choix, toute version ultérieure.
+Texte de la licence : ../vendor/idba/COPYING
+
+Il s'agit d'une adaptation FEVIR, pas d'une release officielle d'IDBA-UD.
+Les modifications sont décrites dans ../vendor/idba/README.md ; les deux
+fichiers source modifiés portent une mention datée.
+
+Sources originales, sources modifiées et patch : ../vendor/idba/
+Script de compilation : ../lib/build_idba.py
+
+Ces exécutables Linux x86-64 incorporent des bibliothèques statiques :
+- glibc 2.39, paquet Ubuntu 2.39-0ubuntu8.6 : principalement LGPL-2.1-or-later,
+  avec les autres notices conservées dans le fichier LICENSES de la glibc ;
+- libstdc++, libgcc et libgomp de GCC 13.3.0, paquet 13.3.0-6ubuntu2~24.04 :
+  GPL-3.0-or-later avec GCC Runtime Library Exception 3.1.
+
+Les licences, notices, sources de la glibc et instructions de reconstruction
+se trouvent dans ../vendor/idba/runtime/.
+
+Ce logiciel est fourni sans garantie, notamment sans garantie de qualité
+marchande ou d'adéquation à un usage particulier, dans les limites prévues
+par les licences jointes.
+
