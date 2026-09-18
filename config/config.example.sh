@@ -19,7 +19,8 @@ SNAP_USE_HUGE_PAGES=0
 ADAPTERS_FASTA="$FEVIR_DIR/db/fasta/TruSeqNexteraAdaptersAll.fa"
 # Optional single-end adapter file. Empty uses ADAPTERS_FASTA.
 ADAPTERS_FASTA_SE=""
-HUMAN_GENOME_DB="$FEVIR_DIR/db/GRCh38_p14_genome"
+#HUMAN_GENOME_DB="$FEVIR_DIR/db/GRCh38_p14_genome" 
+HUMAN_GENOME_DB="$FEVIR_DIR/db/gencode_v43_transcripts" # for local test
 HUMAN_TRANSCRIPTOME_DB="$FEVIR_DIR/db/gencode_v43_transcripts"
 HUMAN_EXTRA_DB="$FEVIR_DIR/db/moreHuman"
 VIROSAURUS_FASTA="$FEVIR_DIR/db/virosaurus2023/Virosaurus2023.fasta"
