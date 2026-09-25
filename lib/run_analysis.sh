@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-.
 set -euo pipefail
 source "$ROOT_DIR/lib/common.sh"
 
@@ -15,6 +14,8 @@ if [[ "$SKIP_DENOVO" -eq 0 ]]; then
     bash "$ROOT_DIR/steps/04_denovo.sh"
 else
     log "De novo assembly and BLASTx skipped (-D)"
+fi
+
 bash "$ROOT_DIR/lib/write_manifest.sh"
 
 "$PYTHON" "$ROOT_DIR/lib/measure_performance.py" --storage-checkpoint
