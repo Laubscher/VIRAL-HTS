@@ -30,7 +30,7 @@ HUMAN_TRANSCRIPTOME_DB="$FEVIR_DIR/db/moreHuman"
 HUMAN_EXTRA_DB="$FEVIR_DIR/db/moreHuman"
 VIROSAURUS_FASTA="$FEVIR_DIR/db/virosaurus2023/Virosaurus2023.fasta"
 VIROSAURUS_METADATA="$FEVIR_DIR/db/virosaurus2023/ref.txt"
-RVDB_PROTEIN_DB="$FEVIR_DIR/db/rvdb/C063gt100-RVDBv12.2-prot.fasta"
+RVDB_PROTEIN_DB="$FEVIR_DIR/db/Viral_protein_database/C063gt100-RVDBv12.2-prot.fasta"
 
 # Optional accession-specific minimum covered-nucleotide thresholds.
 # Format: accession<TAB>minimum_covered_nt

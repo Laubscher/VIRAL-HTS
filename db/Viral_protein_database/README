@@ -1,0 +1,13 @@
+VIRAL PROTEINS DATABASE FOR DENOVO ASSEMBLY PIPELINE
+
+The aim of this database is to be used for xblast to detect (divergent or not) viral contig/genome from assembled sequences.
+The database is based on the RVDB database, protein version from istitut pasteur.  https://rvdb-prot.pasteur.fr/
+This version is cleaned/restricted and clustered. This allow a quick screening of potential viral sequences among thousand of contig. 
+Cleaned/restricted : removed <100 AA sequences,XX-motifs, and AC_number or key_word specifics references. To have less representative of some less conserved proteins or shared with non-viral organism (or totally not wt-viral protein exemple LacZ ) or some virus groups ag. plants virus.
+
+The database is not for classified prupose only for clearing up large conting files, detecting potential viral sequence, each hit should be check up. You may want use an Anellovirus sorting tools before or after the use of this database, depending of your sample type and amuont.
+
+Follow the SOP (Standard operating procedure) "SOP/update.txt" to update the viral protein database.
+Dependencies : cdhit and makeblastdb
+
+Florian LAUBSCHER

@@ -1,0 +1,20 @@
+Update standart operating procedure:
+
+Start 
+
+1. Download the latest version of the Proteic sequence (fasta file) at https://rvdb-prot.pasteur.fr/
+
+
+2. Cluster the database at 63% indentity :
+	cdhit -i [inputFileName.fasta] -o [outputFileName.fasta] -c 0.63
+
+
+3. Clean/restrict the database (remove <100 AA sequences, AC_number and key_word contaning reference (present in list.txt), and XX-motifs contaning sequences ):
+	bash cleanDatabase.sh [list.txt] [newInputFileName.fasta]
+   the output name is [newInputFileName.fasta].out (this process will take some time it is not optimized)
+
+
+4. Make the blast-database:   
+	makeblastdb -in [newNewInputFileName.fasta] -dbtype prot
+
+Done
