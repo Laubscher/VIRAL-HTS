@@ -28,6 +28,8 @@ def collect(root, logs):
                                          universal_newlines=True, errors='replace', timeout=5)
                 record.update(exit_code=process.returncode, output=process.stdout[:16000])
                 lines = [s.strip() for s in process.stdout.splitlines() if s.strip()]
+                # Conda loader warnings can precede the version; keep them in raw output.
+                lines = [s for s in lines if 'no version information available' not in s.lower()]
                 # Help banners may return nonzero, but only a version banner is usable.
                 if banner:
                     lines = [s for s in lines if re.search(r'\bversion\s*[:=]?\s*\d', s, re.I)]
@@ -83,5 +85,3 @@ def collect(root, logs):
     (logs / 'software_versions.json').write_text(json.dumps(probes, indent=2) + '\n')
     build = root / 'docker/software_versions.build.txt'
     if build.is_file():
-        shutil.copyfile(str(build), str(logs / 'container_software_versions.txt'))
-    return summary, probes
