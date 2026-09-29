@@ -20,12 +20,12 @@ SAM="$WORK/${SAMPLE}.virosaurus.sam"
 BAM="$WORK/${SAMPLE}.virosaurus.bam"
 SORTED_BAM="$WORK/${SAMPLE}.virosaurus.sorted.bam"
 COUNTS="$WORK/${SAMPLE}.read_counts.tsv"
-BEDGRAPH="$RESULTS/${SAMPLE}.coverage.bedgraph"
+BEDGRAPH="$RESULTS/${SAMPLE}.coverage.bga"
 
 if [[ -s "$INPUT_R1" ]]; then
     log "Reference detection: mapping reads against Virosaurus 2023 ($READ_LAYOUT)"
     "$MINIMAP2" -t "$THREADS" -ax sr "${LAYOUT_ARGS[@]}" "$VIROSAURUS_FASTA" "${READ_INPUTS[@]}" > "$SAM"
-    "$SAMTOOLS" view -S -b "$SAM" > "$BAM"
+    "$SAMTOOLS" view -S -b -F 4 "$SAM" > "$BAM"
 
     # Count unique read/reference/template-length tuples as in the historical pipeline.
     "$SAMTOOLS" view -F 4 "$BAM" \
@@ -50,12 +50,12 @@ METRIC_ARGS=(
     --metadata "$VIROSAURUS_METADATA"
     --read-length "$READ_LENGTH"
     --all-output "$RESULTS/${SAMPLE}.all_hits.tsv"
-    --best-output "$RESULTS/${SAMPLE}.detected_viruses.tsv"
+    --best-output "$RESULTS/${SAMPLE}.best_hits.tsv"
 )
 if [[ -n "$ACCESSION_THRESHOLDS" ]]; then
     METRIC_ARGS+=(--accession-thresholds "$ACCESSION_THRESHOLDS")
 fi
 
-"$PYTHON" "$ROOT_DIR/lib/compute_metrics.py" "${METRIC_ARGS[@]}"
+"$PYTHON" "$ROOT_DIR/bin/compute_metrics.py" "${METRIC_ARGS[@]}"
 
 log "Reference detection completed"

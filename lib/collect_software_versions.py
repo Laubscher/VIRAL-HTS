@@ -85,3 +85,5 @@ def collect(root, logs):
     (logs / 'software_versions.json').write_text(json.dumps(probes, indent=2) + '\n')
     build = root / 'docker/software_versions.build.txt'
     if build.is_file():
+        shutil.copyfile(str(build), str(logs / 'container_software_versions.txt'))
+    return summary, probes
