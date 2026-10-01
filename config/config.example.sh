@@ -23,10 +23,8 @@ SNAP_USE_HUGE_PAGES=0
 ADAPTERS_FASTA="$FEVIR_DIR/db/fasta/TruSeqNexteraAdaptersAll.fa"
 # Optional single-end adapter file. Empty uses ADAPTERS_FASTA.
 ADAPTERS_FASTA_SE=""
-#HUMAN_GENOME_DB="$FEVIR_DIR/db/GRCh38_p14_genome" 
-HUMAN_GENOME_DB="$FEVIR_DIR/db/moreHuman" # for local test
-#HUMAN_TRANSCRIPTOME_DB="$FEVIR_DIR/db/gencode_v43_transcripts"
-HUMAN_TRANSCRIPTOME_DB="$FEVIR_DIR/db/moreHuman"
+HUMAN_GENOME_DB="$FEVIR_DIR/db/GRCh38_p14_genome" 
+HUMAN_TRANSCRIPTOME_DB="$FEVIR_DIR/db/gencode_v43_transcripts"
 HUMAN_EXTRA_DB="$FEVIR_DIR/db/moreHuman"
 VIROSAURUS_FASTA="$FEVIR_DIR/db/virosaurus2023/Virosaurus2023.fasta"
 VIROSAURUS_METADATA="$FEVIR_DIR/db/virosaurus2023/ref.txt"
@@ -35,7 +33,7 @@ RVDB_PROTEIN_DB="$FEVIR_DIR/db/Viral_protein_database/C063gt100-RVDBv12.2-prot.f
 # Optional accession-specific minimum covered-nucleotide thresholds.
 # Format: accession<TAB>minimum_covered_nt
 # Leave empty to disable.
-ACCESSION_THRESHOLDS=""
+ACCESSION_THRESHOLDS="$FEVIR_DIR/files/black_list.txt"
 
 # Defaults 75-bp workflow.
 DEFAULT_THREADS=20

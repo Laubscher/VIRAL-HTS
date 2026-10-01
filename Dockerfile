@@ -25,7 +25,6 @@ COPY steps/ /opt/fevir/steps/
 COPY files/ /opt/fevir/files/
 COPY config/ /opt/fevir/config/
 
-# System package notices remain in /usr/share/doc and /usr/share/common-licenses.
 RUN chmod -R a+rX /opt/fevir \
     && chmod a+rx /opt/fevir/fevir.sh \
        /opt/fevir/bin/cd-hit-dup /opt/fevir/bin/snap-aligner \
