@@ -18,7 +18,7 @@ LABEL org.opencontainers.image.title="FEVIR" \
 # Existing tools, sources and notices supplied with FEVIR.
 COPY bin/ /opt/fevir/bin/
 COPY vendor/idba/ /opt/fevir/vendor/idba/
-COPY LICENSE NOTICE THIRD_PARTY_NOTICES.md LICENCES.md /opt/fevir/
+COPY LICENSE NOTICE /opt/fevir/
 COPY fevir.sh VERSION /opt/fevir/
 COPY lib/ /opt/fevir/lib/
 COPY steps/ /opt/fevir/steps/
