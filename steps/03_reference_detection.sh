@@ -56,6 +56,6 @@ if [[ -n "$ACCESSION_THRESHOLDS" ]]; then
     METRIC_ARGS+=(--accession-thresholds "$ACCESSION_THRESHOLDS")
 fi
 
-"$PYTHON" "$ROOT_DIR/bin/compute_metrics.py" "${METRIC_ARGS[@]}"
+"$PYTHON" "$ROOT_DIR/lib/compute_metrics.py" "${METRIC_ARGS[@]}"
 
 log "Reference detection completed"
