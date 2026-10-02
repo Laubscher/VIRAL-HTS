@@ -32,8 +32,10 @@ RUN chmod -R a+rX /opt/fevir \
     && mkdir -p /input /output \
     && chmod 1777 /output
 
-# Copy all reference files and existing indexes, without rebuilding them.
-COPY --chmod=0555 db/ /opt/fevir/db/
+# Viral references and adapters only. Host SNAP indexes are supplied at runtime.
+COPY --chmod=0555 db/virosaurus2023/ /opt/fevir/db/virosaurus2023/
+COPY --chmod=0555 db/Viral_protein_database/ /opt/fevir/db/Viral_protein_database/
+COPY --chmod=0444 db/fasta/TruSeqNexteraAdaptersAll.fa /opt/fevir/db/fasta/TruSeqNexteraAdaptersAll.fa
 
 USER 1000:1000
 WORKDIR /output

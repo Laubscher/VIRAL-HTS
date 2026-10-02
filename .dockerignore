@@ -1,4 +1,4 @@
-# Include only the pipeline, tools, reference data and notices.
+# Include the pipeline, tools, viral references, adapters and notices.
 **
 !Dockerfile
 !.dockerignore
@@ -11,7 +11,12 @@
 !bin/
 !bin/**
 !db/
-!db/**
+!db/virosaurus2023/
+!db/virosaurus2023/**
+!db/Viral_protein_database/
+!db/Viral_protein_database/**
+!db/fasta/
+!db/fasta/TruSeqNexteraAdaptersAll.fa
 !vendor/
 !vendor/idba/
 !vendor/idba/**
