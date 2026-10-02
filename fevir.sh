@@ -10,7 +10,8 @@ Usage:
   fevir.sh -1 reads_R1.fastq[.gz] -2 reads_R2.fastq[.gz] -s SAMPLE [options]
   fevir.sh -U reads.fastq[.gz] -s SAMPLE [options]
 
-Preprocessing, reference detection, IDBA-UD assembly and RVDB-prot BLASTx.
+Reference detection, IDBA-UD assembly and RVDB-prot BLASTx.
+Input reads are used unchanged unless --preprocess is supplied.
 
 Input (choose one layout):
   -1 FILE      Paired-end Illumina R1 FASTQ (requires -2)
@@ -26,7 +27,12 @@ Options:
   -t INT       Threads (default from configuration)
   -l INT       Original read length (default from configuration)
   -k           Keep intermediate files
-  -P           Skip trimming, deduplication and host depletion
+  --preprocess Enable adapter/quality trimming and deduplication
+  --host-db DIR
+               Prebuilt SNAP index directory (repeatable, requires --preprocess).
+               Filter remaining reads against each index in the supplied order.
+               Without --host-db, no host depletion is performed. No FASTA indexing.
+  -P           Explicitly skip all preprocessing (the default; legacy alias)
   -D           Skip de novo assembly and BLASTx
   -h           Show this help
 EOF
@@ -35,7 +41,9 @@ EOF
 R1=""
 R2=""
 SINGLE_READS=""
-SKIP_PREPROCESSING=0
+SKIP_PREPROCESSING=1
+CLI_EXPLICIT_SKIP_PREPROCESSING=0
+CLI_HOST_DATABASES=()
 SKIP_DENOVO=0
 SAMPLE=""
 OUTPUT_ROOT="$PWD/fevir_output"
@@ -44,7 +52,7 @@ THREADS=""
 READ_LENGTH=""
 KEEP_INTERMEDIATE=0
 
-while getopts ':1:2:U:s:o:c:t:l:kPDh' option; do
+while getopts ':1:2:U:s:o:c:t:l:kPDh-:' option; do
     case "$option" in
         1) R1="$OPTARG" ;;
         2) R2="$OPTARG" ;;
@@ -55,9 +63,29 @@ while getopts ':1:2:U:s:o:c:t:l:kPDh' option; do
         t) THREADS="$OPTARG" ;;
         l) READ_LENGTH="$OPTARG" ;;
         k) KEEP_INTERMEDIATE=1 ;;
-        P) SKIP_PREPROCESSING=1 ;;
+        P) CLI_EXPLICIT_SKIP_PREPROCESSING=1 ;;
         D) SKIP_DENOVO=1 ;;
         h) usage; exit 0 ;;
+        -)
+            case "$OPTARG" in
+                preprocess) SKIP_PREPROCESSING=0 ;;
+                host-db)
+                    (( OPTIND <= $# )) || die "Option --host-db requires an index directory"
+                    database="${!OPTIND}"
+                    [[ -n "$database" && "$database" != -* ]] \
+                        || die "Option --host-db requires an index directory"
+                    CLI_HOST_DATABASES+=("$database")
+                    OPTIND=$((OPTIND + 1))
+                    ;;
+                host-db=*)
+                    database="${OPTARG#host-db=}"
+                    [[ -n "$database" ]] || die "Option --host-db requires an index directory"
+                    CLI_HOST_DATABASES+=("$database")
+                    ;;
+                help) usage; exit 0 ;;
+                *) die "Unknown option: --$OPTARG" ;;
+            esac
+            ;;
         :) die "Option -$OPTARG requires a value" ;;
         \?) die "Unknown option: -$OPTARG" ;;
     esac
@@ -65,6 +93,12 @@ done
 
 shift "$((OPTIND - 1))"
 [[ "$#" -eq 0 ]] || die "Unexpected positional argument: $1"
+if [[ "$CLI_EXPLICIT_SKIP_PREPROCESSING" -eq 1 && "$SKIP_PREPROCESSING" -eq 0 ]]; then
+    die "Use either --preprocess or -P, not both"
+fi
+if [[ "$SKIP_PREPROCESSING" -eq 1 ]] && ((${#CLI_HOST_DATABASES[@]})); then
+    die "--host-db requires --preprocess"
+fi
 [[ -n "$SAMPLE" ]] || { usage >&2; exit 2; }
 if [[ -n "$SINGLE_READS" ]]; then
     [[ -z "$R1" && -z "$R2" ]] || die "Use either -U for single-end or -1/-2 for paired-end"
@@ -100,7 +134,7 @@ FQ2FA="${FQ2FA:-$ROOT_DIR/bin/fq2fa}"
 IDBA_UD="${IDBA_UD:-$ROOT_DIR/bin/idba_ud}"
 BLASTX="${BLASTX:-blastx}"
 BLASTDBCMD="${BLASTDBCMD:-blastdbcmd}"
-RVDB_PROTEIN_DB="${RVDB_PROTEIN_DB:-$ROOT_DIR/db/rvdb/C063gt100-RVDBv12.2-prot.fasta}"
+RVDB_PROTEIN_DB="${RVDB_PROTEIN_DB:-$ROOT_DIR/db/Viral_protein_database/C063gt100-RVDBv12.2-prot.fasta}"
 MIN_CONTIG_LENGTH="${MIN_CONTIG_LENGTH:-1000}"
 LONG_CONTIG_LENGTH="${LONG_CONTIG_LENGTH:-40000}"
 BLAST_EVALUE="${BLAST_EVALUE:-1}"
@@ -132,8 +166,19 @@ fi
 
 ADAPTERS_FASTA_SE="${ADAPTERS_FASTA_SE:-${ADAPTERS_FASTA:-}}"
 SNAP_USE_HUGE_PAGES="${SNAP_USE_HUGE_PAGES:-0}"
-if [[ "$SKIP_PREPROCESSING" -eq 0 ]]; then
+HOST_DB_COUNT="${#CLI_HOST_DATABASES[@]}"
+SKIP_HOST_DEPLETION=1
+if (( HOST_DB_COUNT > 0 )); then
+    SKIP_HOST_DEPLETION=0
     [[ "$SNAP_USE_HUGE_PAGES" =~ ^[01]$ ]] || die "SNAP_USE_HUGE_PAGES must be 0 or 1"
+    for index in "${!CLI_HOST_DATABASES[@]}"; do
+        database="${CLI_HOST_DATABASES[$index]}"
+        [[ "$database" != *$'\n'* && "$database" != *$'\r'* && "$database" != *$'\t'* ]] \
+            || die "Host database paths cannot contain tabs or line breaks"
+        [[ -d "$database" ]] \
+            || die "--host-db requires a prebuilt SNAP index directory: $database (FASTA indexing is not supported)"
+        CLI_HOST_DATABASES[$index]="$(cd -- "$database" && pwd -P)"
+    done
 fi
 THREADS="${THREADS:-$DEFAULT_THREADS}"
 READ_LENGTH="${READ_LENGTH:-$DEFAULT_READ_LENGTH}"
@@ -152,9 +197,9 @@ fi
 
 export ROOT_DIR CONFIG SAMPLE R1 R2 OUTPUT_ROOT THREADS READ_LENGTH KEEP_INTERMEDIATE
 export READ_LAYOUT SKIP_PREPROCESSING SKIP_DENOVO ADAPTERS_FASTA_SE SNAP_USE_HUGE_PAGES
+export SKIP_HOST_DEPLETION HOST_DB_COUNT
 export JAVA_BIN TRIMMOMATIC_JAR CD_HIT_DUP SNAP_ALIGNER SAMTOOLS MINIMAP2 BEDTOOLS
-export PYTHON ADAPTERS_FASTA HUMAN_GENOME_DB
-export HUMAN_TRANSCRIPTOME_DB HUMAN_EXTRA_DB VIROSAURUS_FASTA VIROSAURUS_METADATA
+export PYTHON ADAPTERS_FASTA VIROSAURUS_FASTA VIROSAURUS_METADATA
 export ACCESSION_THRESHOLDS
 export FQ2FA IDBA_UD BLASTX BLASTDBCMD RVDB_PROTEIN_DB
 export MIN_CONTIG_LENGTH LONG_CONTIG_LENGTH BLAST_EVALUE BLAST_MAX_TARGETS
@@ -165,10 +210,21 @@ export SAMPLE_DIR
 [[ ! -e "$SAMPLE_DIR" ]] || die "Output already exists: $SAMPLE_DIR"
 mkdir -p "$SAMPLE_DIR"/{logs,results,work}
 
+# Shell arrays do not survive the Python supervisor; keep the ordered paths in a file.
+HOST_DB_LIST="$SAMPLE_DIR/logs/host_databases.txt"
+export HOST_DB_LIST
+: > "$HOST_DB_LIST"
+if (( HOST_DB_COUNT > 0 )); then
+    printf '%s\n' "${CLI_HOST_DATABASES[@]}" > "$HOST_DB_LIST"
+fi
+
 exec > >(tee -a "$SAMPLE_DIR/logs/fevir.log") 2>&1
 
 log "Starting FEVIR analysis for $SAMPLE"
 log "Read layout: $READ_LAYOUT"
 log "Output: $SAMPLE_DIR"
+if [[ "$SKIP_PREPROCESSING" -eq 0 ]]; then
+    log "Preprocessing enabled (--preprocess); SNAP databases: $HOST_DB_COUNT"
+fi
 
 exec "$PYTHON" "$ROOT_DIR/lib/measure_performance.py" -- bash "$ROOT_DIR/lib/run_analysis.sh"

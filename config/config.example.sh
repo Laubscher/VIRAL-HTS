@@ -23,15 +23,14 @@ SNAP_USE_HUGE_PAGES=0
 ADAPTERS_FASTA="$FEVIR_DIR/db/fasta/TruSeqNexteraAdaptersAll.fa"
 # Optional single-end adapter file. Empty uses ADAPTERS_FASTA.
 ADAPTERS_FASTA_SE=""
-HUMAN_GENOME_DB="$FEVIR_DIR/db/GRCh38_p14_genome" 
-HUMAN_TRANSCRIPTOME_DB="$FEVIR_DIR/db/gencode_v43_transcripts"
-HUMAN_EXTRA_DB="$FEVIR_DIR/db/moreHuman"
+# Host indexes are external: --preprocess --host-db /path/to/snap_index
+# Repeat --host-db for additional indexes. No host database is selected by default.
 VIROSAURUS_FASTA="$FEVIR_DIR/db/virosaurus2023/Virosaurus2023.fasta"
 VIROSAURUS_METADATA="$FEVIR_DIR/db/virosaurus2023/ref.txt"
 RVDB_PROTEIN_DB="$FEVIR_DIR/db/Viral_protein_database/C063gt100-RVDBv12.2-prot.fasta"
 
 # Optional accession-specific minimum covered-nucleotide thresholds.
-# Format: accession<TAB>minimum_covered_nt
+# Format: accession<TAB>threshold (covered_nt must be strictly greater).
 # Leave empty to disable.
 ACCESSION_THRESHOLDS="$FEVIR_DIR/files/black_list.txt"
 

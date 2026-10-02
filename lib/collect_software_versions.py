@@ -54,7 +54,8 @@ def collect(root, logs):
     add('Read layout', env.get('READ_LAYOUT', 'unknown'))
     probe('Python', env.get('PYTHON'), ['--version'])
     probe('Bash', 'bash', ['--version'])
-    if env.get('SKIP_PREPROCESSING', '0') == '0':
+    if env.get('SKIP_PREPROCESSING', '1') == '0':
+        add('Preprocessing', 'enabled (--preprocess)')
         probe('Java', env.get('JAVA_BIN'), ['-version'])
         probe('Trimmomatic', env.get('JAVA_BIN'), ['-jar', env.get('TRIMMOMATIC_JAR', ''), '-version'])
         jar = env.get('TRIMMOMATIC_JAR', '')
@@ -63,9 +64,15 @@ def collect(root, logs):
         except OSError:
             pass
         probe('CD-HIT/cd-hit-dup', env.get('CD_HIT_DUP'), banner=True)
-        probe('SNAP', env.get('SNAP_ALIGNER'), banner=True)
     else:
-        add('Preprocessing / host depletion', 'skipped (-P)')
+        add('Preprocessing', 'disabled')
+    if env.get('SKIP_HOST_DEPLETION', '1') == '0':
+        probe('SNAP', env.get('SNAP_ALIGNER'), banner=True)
+        host_databases = Path(env['HOST_DB_LIST']).read_text().splitlines()
+        for index, database in enumerate(host_databases, 1):
+            add('SNAP host database {}'.format(index), database)
+    else:
+        add('Host depletion', 'disabled (no host database selected)')
     for label, key in [('SAMtools', 'SAMTOOLS'), ('Minimap2', 'MINIMAP2'), ('BEDTools', 'BEDTOOLS')]:
         probe(label, env.get(key), ['--version'])
     if env.get('SKIP_DENOVO', '0') == '0':

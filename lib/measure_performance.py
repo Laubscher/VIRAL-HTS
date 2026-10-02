@@ -21,7 +21,7 @@ SCHEMA = 1
 RSS_INTERVAL = 5.0
 DISK_INTERVAL = 60.0
 PARAMETERS = (
-    'THREADS READ_LENGTH READ_LAYOUT SKIP_PREPROCESSING SKIP_DENOVO '
+    'THREADS READ_LENGTH READ_LAYOUT SKIP_PREPROCESSING SKIP_HOST_DEPLETION HOST_DB_COUNT SKIP_DENOVO '
     'KEEP_INTERMEDIATE SNAP_USE_HUGE_PAGES MIN_CONTIG_LENGTH LONG_CONTIG_LENGTH '
     'BLAST_EVALUE BLAST_MAX_TARGETS IDBA_MINK IDBA_MAXK IDBA_STEP'
 ).split()
@@ -217,12 +217,15 @@ def initial_report():
             code[str(p.relative_to(root))] = hashlib.sha256(p.read_bytes()).hexdigest()
     tools = {k: file_identity(shutil.which(env.get(k, '')) or env.get(k)) for k in TOOLS}
     active_references = ['VIROSAURUS_FASTA', 'VIROSAURUS_METADATA', 'ACCESSION_THRESHOLDS']
-    if env.get('SKIP_PREPROCESSING', '0') == '0':
-        active_references += ['ADAPTERS_FASTA', 'ADAPTERS_FASTA_SE', 'HUMAN_GENOME_DB',
-                              'HUMAN_TRANSCRIPTOME_DB', 'HUMAN_EXTRA_DB']
+    if env.get('SKIP_PREPROCESSING', '1') == '0':
+        active_references += ['ADAPTERS_FASTA_SE' if env.get('READ_LAYOUT') == 'single' else 'ADAPTERS_FASTA']
     if env.get('SKIP_DENOVO', '0') == '0':
         active_references += ['RVDB_PROTEIN_DB']
     references = {k: reference_identity(env[k]) for k in active_references if env.get(k)}
+    if env.get('SKIP_HOST_DEPLETION', '1') == '0':
+        host_databases = Path(env['HOST_DB_LIST']).read_text().splitlines()
+        for index, database in enumerate(host_databases, 1):
+            references['HOST_DB_{:03d}'.format(index)] = reference_identity(database)
     parameters = {k: env.get(k) for k in PARAMETERS}
     configuration = file_identity(env.get('CONFIG'), content=True)
     computational_environment = environment()

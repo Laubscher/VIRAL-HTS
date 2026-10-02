@@ -37,6 +37,8 @@ def summarize(paths):
                'n_successful': len(successful), 'n_failed_or_incomplete': len(reports) - len(successful),
                'threads_requested': first['parameters'].get('THREADS'),
                'skip_preprocessing': first['parameters'].get('SKIP_PREPROCESSING'),
+               'skip_host_depletion': first['parameters'].get('SKIP_HOST_DEPLETION'),
+               'host_database_count': first['parameters'].get('HOST_DB_COUNT'),
                'skip_denovo': first['parameters'].get('SKIP_DENOVO'),
                'cpu_model': env.get('cpu_model'), 'hostname': env.get('hostname'),
                'os': env.get('os'), 'kernel': env.get('kernel'),

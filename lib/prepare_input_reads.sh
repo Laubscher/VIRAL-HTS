@@ -7,7 +7,7 @@ WORK="$SAMPLE_DIR/work/00_input"
 RESULTS="$SAMPLE_DIR/results/reads"
 mkdir -p "$WORK" "$RESULTS"
 
-log "Preprocessing and host depletion skipped (-P): using input reads unchanged"
+log "Preprocessing and host depletion disabled: using input reads unchanged"
 LABEL=SE
 if [[ "$READ_LAYOUT" == paired ]]; then LABEL=R1; fi
 INPUT_R1="$WORK/${SAMPLE}.input.${LABEL}.fastq"

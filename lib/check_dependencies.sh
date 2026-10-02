@@ -11,8 +11,8 @@ for file in "$VIROSAURUS_FASTA" "$VIROSAURUS_METADATA"; do
     require_file "$file"
 done
 
-if [[ "${SKIP_PREPROCESSING:-0}" -eq 0 ]]; then
-    for program in "$JAVA_BIN" "$CD_HIT_DUP" "$SNAP_ALIGNER"; do
+if [[ "$SKIP_PREPROCESSING" -eq 0 ]]; then
+    for program in "$JAVA_BIN" "$CD_HIT_DUP"; do
         require_program "$program"
     done
     ADAPTER_FILE="$ADAPTERS_FASTA"
@@ -20,9 +20,17 @@ if [[ "${SKIP_PREPROCESSING:-0}" -eq 0 ]]; then
     for file in "$TRIMMOMATIC_JAR" "$ADAPTER_FILE"; do
         require_file "$file"
     done
-    for database in "$HUMAN_GENOME_DB" "$HUMAN_TRANSCRIPTOME_DB" "$HUMAN_EXTRA_DB"; do
-        require_path "$database"
-    done
+fi
+
+if [[ "$SKIP_HOST_DEPLETION" -eq 0 ]]; then
+    require_program "$SNAP_ALIGNER"
+    while IFS= read -r database; do
+        [[ -d "$database" ]] || die "SNAP index directory not found: $database"
+        for index_file in Genome GenomeIndex GenomeIndexHash OverflowTable; do
+            [[ -f "$database/$index_file" && -r "$database/$index_file" ]] \
+                || die "Incomplete or unreadable SNAP index: $database/$index_file"
+        done
+    done < "$HOST_DB_LIST"
 fi
 
 if [[ -n "$ACCESSION_THRESHOLDS" ]]; then
