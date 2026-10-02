@@ -118,7 +118,7 @@ with open(args.all_output, "w", encoding="utf-8", newline="") as handle:
     writer.writeheader()
     writer.writerows(rows)
 
-minimum_covered_nt = max(3 * args.read_length, 226)
+minimum_covered_nt = max(3 * args.read_length, 300)
 grouped = defaultdict(list)
 for row in rows:
     accession_key = row["accession"].split(":", 1)[0]

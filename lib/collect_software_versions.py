@@ -77,7 +77,6 @@ def collect(root, logs):
     else:
         add('De novo / BLASTx', 'skipped (-D)')
     add('Virosaurus FASTA path', env.get('VIROSAURUS_FASTA', 'unknown'))
-    add('Database version provenance', 'configured paths; RVDB metadata in rvdb.info.txt when available')
     buffer = io.StringIO()
     csv.writer(buffer, delimiter='\t', lineterminator='\n').writerows(rows)
     summary = buffer.getvalue()
