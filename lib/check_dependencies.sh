@@ -38,6 +38,10 @@ if [[ -n "$ACCESSION_THRESHOLDS" ]]; then
 fi
 
 if [[ "$SKIP_DENOVO" -eq 0 ]]; then
+    if [[ -e "$RVDB_FAMILY_MAP" ]]; then
+        [[ -f "$RVDB_FAMILY_MAP" && -r "$RVDB_FAMILY_MAP" ]] \
+            || die "Unreadable protein family map: $RVDB_FAMILY_MAP"
+    fi
     for program in "$FQ2FA" "$IDBA_UD" "$BLASTX" "$BLASTDBCMD"; do
         require_program "$program"
     done

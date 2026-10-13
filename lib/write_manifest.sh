@@ -29,6 +29,8 @@ cp "$SAMPLE_DIR/logs/software_versions.txt" "$MANIFEST"
             "$([[ "$READ_LAYOUT" == single ]] && printf 1 || printf 0)" "$IDBA_MINK" "$IDBA_MAXK" "$IDBA_STEP"
         printf 'min_contig_length\t%s\nlong_contig_length\t%s\nblast_evalue\t%s\nblast_max_targets\t%s\n' \
             "$MIN_CONTIG_LENGTH" "$LONG_CONTIG_LENGTH" "$BLAST_EVALUE" "$BLAST_MAX_TARGETS"
+        printf 'rvdb_family_map\t%s\ndenovo_family_evalue\t%s\n' \
+            "$RVDB_FAMILY_MAP" "$DENOVO_FAMILY_EVALUE"
     fi
 } > "$SAMPLE_DIR/results/run_parameters.tsv"
 

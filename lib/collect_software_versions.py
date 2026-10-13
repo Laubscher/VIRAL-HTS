@@ -81,6 +81,9 @@ def collect(root, logs):
         probe('NCBI BLAST+', env.get('BLASTX'), ['-version'])
         probe('blastdbcmd', env.get('BLASTDBCMD'), ['-version'])
         add('RVDB-prot database path', env.get('RVDB_PROTEIN_DB', 'unknown'))
+        family_map = env.get('RVDB_FAMILY_MAP', '')
+        add('RVDB family map', family_map if family_map and Path(family_map).is_file()
+            else 'unavailable; no de novo family assignments')
     else:
         add('De novo / BLASTx', 'skipped (-D)')
     add('Virosaurus FASTA path', env.get('VIROSAURUS_FASTA', 'unknown'))

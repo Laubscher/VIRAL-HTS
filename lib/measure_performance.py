@@ -23,7 +23,7 @@ DISK_INTERVAL = 60.0
 PARAMETERS = (
     'THREADS READ_LENGTH READ_LAYOUT SKIP_PREPROCESSING SKIP_HOST_DEPLETION HOST_DB_COUNT SKIP_DENOVO '
     'KEEP_INTERMEDIATE SNAP_USE_HUGE_PAGES MIN_CONTIG_LENGTH LONG_CONTIG_LENGTH '
-    'BLAST_EVALUE BLAST_MAX_TARGETS IDBA_MINK IDBA_MAXK IDBA_STEP'
+    'BLAST_EVALUE BLAST_MAX_TARGETS DENOVO_FAMILY_EVALUE IDBA_MINK IDBA_MAXK IDBA_STEP'
 ).split()
 TOOLS = ('JAVA_BIN TRIMMOMATIC_JAR CD_HIT_DUP SNAP_ALIGNER SAMTOOLS MINIMAP2 '
          'BEDTOOLS PYTHON FQ2FA IDBA_UD BLASTX BLASTDBCMD').split()
@@ -220,7 +220,7 @@ def initial_report():
     if env.get('SKIP_PREPROCESSING', '1') == '0':
         active_references += ['ADAPTERS_FASTA_SE' if env.get('READ_LAYOUT') == 'single' else 'ADAPTERS_FASTA']
     if env.get('SKIP_DENOVO', '0') == '0':
-        active_references += ['RVDB_PROTEIN_DB']
+        active_references += ['RVDB_PROTEIN_DB', 'RVDB_FAMILY_MAP']
     references = {k: reference_identity(env[k]) for k in active_references if env.get(k)}
     if env.get('SKIP_HOST_DEPLETION', '1') == '0':
         host_databases = Path(env['HOST_DB_LIST']).read_text().splitlines()

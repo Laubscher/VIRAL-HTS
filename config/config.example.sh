@@ -28,6 +28,8 @@ ADAPTERS_FASTA_SE=""
 VIROSAURUS_FASTA="$FEVIR_DIR/db/virosaurus2023/Virosaurus2023.fasta"
 VIROSAURUS_METADATA="$FEVIR_DIR/db/virosaurus2023/ref.txt"
 RVDB_PROTEIN_DB="$FEVIR_DIR/db/Viral_protein_database/C063gt100-RVDBv12.2-prot.fasta"
+# If absent, contig files are still written, without family assignments.
+RVDB_FAMILY_MAP="${RVDB_PROTEIN_DB}.families.tsv"
 
 # Optional accession-specific minimum covered-nucleotide thresholds.
 # Format: accession<TAB>threshold (covered_nt must be strictly greater).
@@ -41,6 +43,7 @@ MIN_CONTIG_LENGTH=1000
 LONG_CONTIG_LENGTH=40000
 BLAST_EVALUE=1
 BLAST_MAX_TARGETS=3
+DENOVO_FAMILY_EVALUE=1
 IDBA_MINK=21
 IDBA_MAXK=75
 IDBA_STEP=20

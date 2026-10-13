@@ -16,6 +16,19 @@ LONG_CONTIGS="$RESULTS/${SAMPLE}.contigs.min${LONG_CONTIG_LENGTH}.fasta"
 BLAST="$RESULTS/${SAMPLE}.blastx.tsv"
 VIRAL_CONTIGS="$RESULTS/${SAMPLE}.viral_contigs.fasta"
 
+summarize_families() {
+    local summary_args=(--fasta "$CONTIGS" --blast "$BLAST"
+        --output-prefix "$RESULTS/$SAMPLE"
+        --max-evalue "$DENOVO_FAMILY_EVALUE"
+        --blast-max-targets "$BLAST_MAX_TARGETS")
+    if [[ -f "$RVDB_FAMILY_MAP" ]]; then
+        summary_args+=(--taxonomy-map "$RVDB_FAMILY_MAP")
+    else
+        log "De novo family map absent: $RVDB_FAMILY_MAP; writing contig audit without family assignments"
+    fi
+    "$PYTHON" "$ROOT_DIR/lib/summarize_denovo_families.py" "${summary_args[@]}"
+}
+
 if [[ ! -s "$INPUT_R1" ]]; then
     for output in "$ASSEMBLY" "$CONTIGS" "$LONG_CONTIGS" "$BLAST" "$VIRAL_CONTIGS"; do
         : > "$output"
@@ -23,6 +36,7 @@ if [[ ! -s "$INPUT_R1" ]]; then
     printf 'metric\tvalue\nreads\t0\nbases\t0\nminimum_read_length\t0\nmaximum_read_length\t0\n' \
         > "$RESULTS/${SAMPLE}.input_stats.tsv"
     log "De novo: no reads remain after host depletion"
+    summarize_families
     exit 0
 fi
 
@@ -75,6 +89,7 @@ if [[ ! -s "$CONTIGS" ]]; then
     : > "$BLAST"
     : > "$VIRAL_CONTIGS"
     log "De novo: no contig reached ${MIN_CONTIG_LENGTH} nt; BLASTx skipped"
+    summarize_families
     exit 0
 fi
 
@@ -88,4 +103,5 @@ log "De novo: BLASTx against $RVDB_PROTEIN_DB"
 "$PYTHON" "$ROOT_DIR/lib/extract_blast_hits.py" \
     --fasta "$CONTIGS" --blast "$BLAST" --output "$VIRAL_CONTIGS"
 
+summarize_families
 log "De novo analysis completed"
