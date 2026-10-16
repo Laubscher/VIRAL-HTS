@@ -1,5 +1,7 @@
-# VIRAL-HTS
-High-Throughput Sequencing for virus detection
+Copyright (C) 2020 Thomas Junier and Florian Laubscher
+
+# FEVIR
+High-throughput sequencing for viral detection
 
 # Container
 
