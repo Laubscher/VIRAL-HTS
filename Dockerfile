@@ -11,9 +11,9 @@ RUN apt-get update \
 ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/fevir/bin" \
     LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     PYTHONDONTWRITEBYTECODE=1 PYTHONNOUSERSITE=1 \
-    FEVIR_CONTAINER_IMAGE=fevir:1.0.0-dev
+    FEVIR_CONTAINER_IMAGE=fevir:1.0.0
 LABEL org.opencontainers.image.title="FEVIR" \
-      org.opencontainers.image.version="1.0.0-dev"
+      org.opencontainers.image.version="1.0.0"
 
 # Existing tools, sources and notices supplied with FEVIR.
 COPY bin/ /opt/fevir/bin/
