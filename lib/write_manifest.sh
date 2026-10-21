@@ -3,10 +3,8 @@ set -euo pipefail
 
 source "$ROOT_DIR/lib/common.sh"
 
-MANIFEST="$SAMPLE_DIR/results/software_versions.txt"
-
-# liste dans les log même si le run échoue.
-cp "$SAMPLE_DIR/logs/software_versions.txt" "$MANIFEST"
+LOGS="$SAMPLE_DIR/logs"
+mkdir -p "$LOGS"
 
 {
     printf 'parameter\tvalue\n'
@@ -32,9 +30,6 @@ cp "$SAMPLE_DIR/logs/software_versions.txt" "$MANIFEST"
         printf 'rvdb_family_map\t%s\ndenovo_family_evalue\t%s\n' \
             "$RVDB_FAMILY_MAP" "$DENOVO_FAMILY_EVALUE"
     fi
-} > "$SAMPLE_DIR/results/run_parameters.tsv"
+} > "$LOGS/run_parameters.tsv"
 
-cp "$CONFIG" "$SAMPLE_DIR/logs/config.used.sh"
-if [[ -f "$ROOT_DIR/docker/software_versions.build.txt" ]]; then
-    cp "$ROOT_DIR/docker/software_versions.build.txt" "$SAMPLE_DIR/results/container_software_versions.txt"
-fi
+cp "$CONFIG" "$LOGS/config.used.sh"

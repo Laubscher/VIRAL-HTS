@@ -5,7 +5,8 @@ source "$ROOT_DIR/lib/common.sh"
 
 WORK="$SAMPLE_DIR/work/01_preprocess"
 RESULTS="$SAMPLE_DIR/results/reads"
-mkdir -p "$WORK" "$RESULTS"
+LOGS="$SAMPLE_DIR/logs"
+mkdir -p "$WORK" "$RESULTS" "$LOGS"
 
 RAW_R1="$WORK/${SAMPLE}.raw.R1.fastq"
 RAW_R2="$WORK/${SAMPLE}.raw.R2.fastq"
@@ -69,7 +70,7 @@ fi
     --trimmed-r1 "$QUALITY_R1" \
     --deduplicated-r1 "$DEDUP_R1" \
     --layout "$READ_LAYOUT" \
-    --output "$SAMPLE_DIR/results/preprocessing_stats.tsv"
+    --output "$LOGS/preprocessing_stats.tsv"
 
 export PREPROCESSED_R1="$DEDUP_R1"
 printf '%s\n' "$PREPROCESSED_R1" > "$SAMPLE_DIR/work/preprocessed_r1.path"

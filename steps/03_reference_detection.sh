@@ -5,7 +5,8 @@ source "$ROOT_DIR/lib/common.sh"
 
 WORK="$SAMPLE_DIR/work/03_reference_detection"
 RESULTS="$SAMPLE_DIR/results/reference_detection"
-mkdir -p "$WORK" "$RESULTS"
+MAPPING_RESULTS="$RESULTS/mapping"
+mkdir -p "$WORK" "$MAPPING_RESULTS"
 
 INPUT_R1="$(<"$SAMPLE_DIR/work/host_depleted_r1.path")"
 READ_INPUTS=("$INPUT_R1")
@@ -20,7 +21,7 @@ SAM="$WORK/${SAMPLE}.virosaurus.sam"
 BAM="$WORK/${SAMPLE}.virosaurus.bam"
 SORTED_BAM="$WORK/${SAMPLE}.virosaurus.sorted.bam"
 COUNTS="$WORK/${SAMPLE}.read_counts.tsv"
-BEDGRAPH="$RESULTS/${SAMPLE}.coverage.bga"
+BEDGRAPH="$MAPPING_RESULTS/${SAMPLE}.coverage.bga"
 
 if [[ -s "$INPUT_R1" ]]; then
     log "Reference detection: mapping reads against Virosaurus 2023 ($READ_LAYOUT)"
@@ -49,7 +50,7 @@ METRIC_ARGS=(
     --read-counts "$COUNTS"
     --metadata "$VIROSAURUS_METADATA"
     --read-length "$READ_LENGTH"
-    --all-output "$RESULTS/${SAMPLE}.all_hits.tsv"
+    --all-output "$MAPPING_RESULTS/${SAMPLE}.all_hits.tsv"
     --best-output "$RESULTS/${SAMPLE}.best_hits.tsv"
 )
 if [[ -n "$ACCESSION_THRESHOLDS" ]]; then

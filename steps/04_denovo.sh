@@ -5,20 +5,25 @@ source "$ROOT_DIR/lib/common.sh"
 
 WORK="$SAMPLE_DIR/work/04_denovo"
 RESULTS="$SAMPLE_DIR/results/denovo"
-mkdir -p "$WORK" "$RESULTS"
+ASSEMBLY_RESULTS="$RESULTS/assembly"
+LOGS="$SAMPLE_DIR/logs"
+mkdir -p "$WORK" "$ASSEMBLY_RESULTS" "$LOGS"
 
 INPUT_R1="$(<"$SAMPLE_DIR/work/host_depleted_r1.path")"
 ASSEMBLY_DIR="$WORK/idba_ud"
 READ_FASTA="$WORK/${SAMPLE}.reads.fasta"
-ASSEMBLY="$RESULTS/${SAMPLE}.assembly.fasta"
-CONTIGS="$RESULTS/${SAMPLE}.contigs.min${MIN_CONTIG_LENGTH}.fasta"
-LONG_CONTIGS="$RESULTS/${SAMPLE}.contigs.min${LONG_CONTIG_LENGTH}.fasta"
-BLAST="$RESULTS/${SAMPLE}.blastx.tsv"
-VIRAL_CONTIGS="$RESULTS/${SAMPLE}.viral_contigs.fasta"
+ASSEMBLY="$ASSEMBLY_RESULTS/${SAMPLE}.assembly.fasta"
+CONTIGS="$ASSEMBLY_RESULTS/${SAMPLE}.contigs.min${MIN_CONTIG_LENGTH}.fasta"
+LONG_CONTIGS="$ASSEMBLY_RESULTS/${SAMPLE}.contigs.min${LONG_CONTIG_LENGTH}.fasta"
+BLAST="$ASSEMBLY_RESULTS/${SAMPLE}.blastx.tsv"
+VIRAL_CONTIGS="$ASSEMBLY_RESULTS/${SAMPLE}.viral_contigs.fasta"
 
 summarize_families() {
     local summary_args=(--fasta "$CONTIGS" --blast "$BLAST"
         --output-prefix "$RESULTS/$SAMPLE"
+        --families-dir "$RESULTS/families"
+        --details-dir "$ASSEMBLY_RESULTS"
+        --no-summary-json
         --max-evalue "$DENOVO_FAMILY_EVALUE"
         --blast-max-targets "$BLAST_MAX_TARGETS")
     if [[ -f "$RVDB_FAMILY_MAP" ]]; then
@@ -34,7 +39,7 @@ if [[ ! -s "$INPUT_R1" ]]; then
         : > "$output"
     done
     printf 'metric\tvalue\nreads\t0\nbases\t0\nminimum_read_length\t0\nmaximum_read_length\t0\n' \
-        > "$RESULTS/${SAMPLE}.input_stats.tsv"
+        > "$LOGS/${SAMPLE}.input_stats.tsv"
     log "De novo: no reads remain after host depletion"
     summarize_families
     exit 0
@@ -52,7 +57,7 @@ IDBA_HELP="$("$IDBA_UD" 2>&1 || true)"
 READ_LIMIT_PATTERN='fasta read file \(<=([0-9]+)\)'
 [[ "$IDBA_HELP" =~ $READ_LIMIT_PATTERN ]] || die "Cannot determine the IDBA-UD read-length limit"
 "$PYTHON" "$ROOT_DIR/lib/check_assembly_reads.py" "${CHECK_ARGS[@]}" \
-    --maximum-length "${BASH_REMATCH[1]}" --output "$RESULTS/${SAMPLE}.input_stats.tsv"
+    --maximum-length "${BASH_REMATCH[1]}" --output "$LOGS/${SAMPLE}.input_stats.tsv"
 
 if [[ "$READ_LAYOUT" == paired ]]; then
     log "De novo: interleaving paired FASTQ into FASTA"

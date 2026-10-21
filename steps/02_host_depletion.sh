@@ -5,9 +5,10 @@ source "$ROOT_DIR/lib/common.sh"
 
 WORK="$SAMPLE_DIR/work/02_host_depletion"
 RESULTS="$SAMPLE_DIR/results/reads"
+LOGS="$SAMPLE_DIR/logs"
 SNAP_ARGS=()
 if [[ "${SNAP_USE_HUGE_PAGES:-0}" -eq 1 ]]; then SNAP_ARGS+=(-hp); fi
-mkdir -p "$RESULTS"
+mkdir -p "$RESULTS" "$LOGS"
 mapfile -t HOST_DATABASES < "$HOST_DB_LIST"
 if ((${#HOST_DATABASES[@]})); then mkdir -p "$WORK"; fi
 
@@ -79,15 +80,15 @@ fi
 
 if ((${#HOST_DATABASES[@]})); then
     "$PYTHON" "$ROOT_DIR/lib/append_host_stats.py" \
-        --stats "$SAMPLE_DIR/results/preprocessing_stats.tsv" \
+        --stats "$LOGS/preprocessing_stats.tsv" \
         --deduplicated-r1 "$INPUT_R1" \
         --host-depleted-r1 "$FINAL_R1" \
         --layout "$READ_LAYOUT"
     printf 'host_depletion\tcompleted\nhost_database_count\t%s\n' "${#HOST_DATABASES[@]}" \
-        >> "$SAMPLE_DIR/results/preprocessing_stats.tsv"
+        >> "$LOGS/preprocessing_stats.tsv"
 else
     printf 'host_depletion\tskipped\nhost_database_count\t0\n' \
-        >> "$SAMPLE_DIR/results/preprocessing_stats.tsv"
+        >> "$LOGS/preprocessing_stats.tsv"
 fi
 
 printf '%s\n' "$FINAL_R1" > "$SAMPLE_DIR/work/host_depleted_r1.path"
