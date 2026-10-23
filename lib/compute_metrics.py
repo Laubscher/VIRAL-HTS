@@ -66,7 +66,6 @@ parser.add_argument("--accession-thresholds")
 parser.add_argument("--all-output", required=True)
 parser.add_argument("--best-output", required=True)
 args = parser.parse_args()
-
 metadata = load_metadata(args.metadata)
 custom_thresholds = load_thresholds(args.accession_thresholds)
 read_counts = defaultdict(int)
@@ -75,7 +74,6 @@ with open(args.read_counts, encoding="utf-8") as handle:
         if line.strip():
             accession, count = line.rstrip("\n").split("\t")[:2]
             read_counts[accession] = int(count)
-
 coverage = defaultdict(int)
 genome_lengths = defaultdict(int)
 positive_intervals = defaultdict(list)
@@ -91,7 +89,6 @@ with open(args.bedgraph, encoding="utf-8") as handle:
             interval_length = end - start
             coverage[accession] += interval_length
             positive_intervals[accession].append((depth_value, interval_length))
-
 rows = []
 for accession in sorted(coverage):
     covered = coverage[accession]
@@ -110,14 +107,12 @@ for accession in sorted(coverage):
         "family": info["family"],
         "accession": accession,
     })
-
 columns = ["virus", "percent_coverage", "median_depth", "reads", "covered_nt",
            "reference_length", "species", "family", "accession"]
 with open(args.all_output, "w", encoding="utf-8", newline="") as handle:
     writer = csv.DictWriter(handle, fieldnames=columns, delimiter="\t")
     writer.writeheader()
     writer.writerows(rows)
-
 minimum_covered_nt = max(3 * args.read_length, 300)
 grouped = defaultdict(list)
 for row in rows:
@@ -125,11 +120,10 @@ for row in rows:
     accession_minimum = custom_thresholds.get(accession_key, -1) + 1
     required = max(minimum_covered_nt, accession_minimum)
     if row["covered_nt"] >= required:
-        grouped[row["virus"]].append(row)
-
+        grouped[(row["family"], row["virus"])].append(row)
 best_rows = []
-for virus in sorted(grouped):
-    candidates = grouped[virus]
+for group in sorted(grouped):
+    candidates = grouped[group]
     candidates.sort(
         key=lambda row: (-row["covered_nt"], -row["median_depth"], -row["reads"], row["accession"])
     )
@@ -139,4 +133,3 @@ with open(args.best_output, "w", encoding="utf-8", newline="") as handle:
     writer = csv.DictWriter(handle, fieldnames=columns, delimiter="\t")
     writer.writeheader()
     writer.writerows(best_rows)
-
