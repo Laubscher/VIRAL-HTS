@@ -212,7 +212,7 @@ export IDBA_MINK IDBA_MAXK IDBA_STEP
 
 SAMPLE_DIR="$OUTPUT_ROOT/$SAMPLE"
 export SAMPLE_DIR
-[[ ! -e "$SAMPLE_DIR" ]] || die "Output already exists: $SAMPLE_DIR"
+mkdir -- "$SAMPLE_DIR" || die "Cannot create output directory (already exists or parent is missing): $SAMPLE_DIR"
 mkdir -p "$SAMPLE_DIR"/{logs,results,work}
 
 # Shell arrays do not survive the Python supervisor; keep the ordered paths in a file.

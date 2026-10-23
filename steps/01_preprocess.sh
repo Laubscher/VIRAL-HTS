@@ -25,7 +25,7 @@ fi
 
 if [[ "$READ_LAYOUT" == paired ]]; then
     log "Preprocessing: trimming TruSeq/Nextera adapters with Trimmomatic 0.36"
-    "$JAVA_BIN" -jar "$TRIMMOMATIC_JAR" PE \
+    "$JAVA_BIN" -jar "$TRIMMOMATIC_JAR" PE -phred33 \
         -threads "$THREADS" \
         "$RAW_R1" "$RAW_R2" \
         "$ADAPTER_R1" "$WORK/adapter.unpaired.R1.fastq" \
@@ -33,7 +33,7 @@ if [[ "$READ_LAYOUT" == paired ]]; then
         "ILLUMINACLIP:${ADAPTERS_FASTA}:1:30:7:1:true" MINLEN:65
 
     log "Preprocessing: quality trimming with Trimmomatic 0.36"
-    "$JAVA_BIN" -jar "$TRIMMOMATIC_JAR" PE \
+    "$JAVA_BIN" -jar "$TRIMMOMATIC_JAR" PE -phred33 \
         -threads "$THREADS" \
         "$ADAPTER_R1" "$ADAPTER_R2" \
         "$QUALITY_R1" "$WORK/quality.unpaired.R1.fastq" \
@@ -41,12 +41,12 @@ if [[ "$READ_LAYOUT" == paired ]]; then
         MAXINFO:40:0.3 LEADING:10 TRAILING:10 MINLEN:65
 else
     log "Preprocessing: trimming single-end adapters with Trimmomatic 0.36"
-    "$JAVA_BIN" -jar "$TRIMMOMATIC_JAR" SE -threads "$THREADS" \
+    "$JAVA_BIN" -jar "$TRIMMOMATIC_JAR" SE -phred33 -threads "$THREADS" \
         "$RAW_R1" "$ADAPTER_R1" \
         "ILLUMINACLIP:${ADAPTERS_FASTA_SE}:1:30:7" MINLEN:65
 
     log "Preprocessing: single-end quality trimming with Trimmomatic 0.36"
-    "$JAVA_BIN" -jar "$TRIMMOMATIC_JAR" SE -threads "$THREADS" \
+    "$JAVA_BIN" -jar "$TRIMMOMATIC_JAR" SE -phred33 -threads "$THREADS" \
         "$ADAPTER_R1" "$QUALITY_R1" \
         MAXINFO:40:0.3 LEADING:10 TRAILING:10 MINLEN:65
 fi
