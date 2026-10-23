@@ -1,8 +1,7 @@
 Copyright (C) 2020 Thomas Junier and Florian Laubscher
 
 # FEVIR
-High-throughput sequencing for viral detection
-
+Viral detection from high-throughput sequencing data
 # Container
 
 ```bash
