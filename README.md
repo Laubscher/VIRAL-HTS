@@ -3,6 +3,11 @@ Copyright (C) 2020 Thomas Junier and Florian Laubscher
 # FEVIR
 Viral detection from high-throughput sequencing data
 
+### FEVIR v1.0.1
+```text
++ Updated Ubuntu packages to address security vulnerabilities
++ Simplified run logs
+```
 ### FEVIR v1.0.0
 ```text
 + Single-end (SE) support

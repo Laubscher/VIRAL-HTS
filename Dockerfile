@@ -3,6 +3,7 @@ FROM ubuntu:22.04
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+       apt libapt-pkg6.0 libbrotli1 \
        ca-certificates python3 openjdk-17-jre-headless samtools bedtools ncbi-blast+ \
        bash coreutils findutils grep sed gawk gzip \
        libgomp1 libstdc++6 zlib1g libbz2-1.0 liblzma5 libncurses5 libtinfo5 libcurl4 \
@@ -11,9 +12,9 @@ RUN apt-get update \
 ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/fevir/bin" \
     LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     PYTHONDONTWRITEBYTECODE=1 PYTHONNOUSERSITE=1 \
-    FEVIR_CONTAINER_IMAGE=fevir:1.0.0
+    FEVIR_CONTAINER_IMAGE=fevir:1.0.1
 LABEL org.opencontainers.image.title="FEVIR" \
-      org.opencontainers.image.version="1.0.0"
+      org.opencontainers.image.version="1.0.1"
 
 # Existing tools, sources and notices supplied with FEVIR.
 COPY bin/ /opt/fevir/bin/
