@@ -216,7 +216,7 @@ mkdir -- "$SAMPLE_DIR" || die "Cannot create output directory (already exists or
 mkdir -p "$SAMPLE_DIR"/{logs,results,work}
 
 # Shell arrays do not survive the Python supervisor; keep the ordered paths in a file.
-HOST_DB_LIST="$SAMPLE_DIR/logs/host_databases.txt"
+HOST_DB_LIST="$SAMPLE_DIR/work/host_databases.txt"
 export HOST_DB_LIST
 : > "$HOST_DB_LIST"
 if (( HOST_DB_COUNT > 0 )); then

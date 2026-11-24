@@ -32,7 +32,7 @@ def main():
     parser.add_argument("--r1", required=True)
     parser.add_argument("--r2")
     parser.add_argument("--maximum-length", type=int)
-    parser.add_argument("--output", required=True)
+    parser.add_argument("--output", help="Optional TSV statistics; validation alone by default")
     args = parser.parse_args()
     count = total = maximum = 0
     minimum = None
@@ -51,11 +51,12 @@ def main():
             total += length
             maximum = max(maximum, length)
             minimum = length if minimum is None else min(minimum, length)
-    with open(args.output, "w") as out:
-        out.write("metric\tvalue\n")
-        for name, value in (("reads", count), ("bases", total), ("minimum_read_length", minimum or 0),
-                            ("maximum_read_length", maximum)):
-            out.write(f"{name}\t{value}\n")
+    if args.output:
+        with open(args.output, "w") as out:
+            out.write("metric\tvalue\n")
+            for name, value in (("reads", count), ("bases", total), ("minimum_read_length", minimum or 0),
+                                ("maximum_read_length", maximum)):
+                out.write(f"{name}\t{value}\n")
 
 
 if __name__ == "__main__":

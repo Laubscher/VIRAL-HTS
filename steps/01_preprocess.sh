@@ -5,8 +5,7 @@ source "$ROOT_DIR/lib/common.sh"
 
 WORK="$SAMPLE_DIR/work/01_preprocess"
 RESULTS="$SAMPLE_DIR/results/reads"
-LOGS="$SAMPLE_DIR/logs"
-mkdir -p "$WORK" "$RESULTS" "$LOGS"
+mkdir -p "$WORK" "$RESULTS"
 
 RAW_R1="$WORK/${SAMPLE}.raw.R1.fastq"
 RAW_R2="$WORK/${SAMPLE}.raw.R2.fastq"
@@ -64,13 +63,6 @@ else
     log "Preprocessing: removing single-end duplicates with cd-hit-dup 4.6.8"
     "$CD_HIT_DUP" -i "$QUALITY_R1" -o "$DEDUP_R1"
 fi
-
-"$PYTHON" "$ROOT_DIR/lib/fastq_stats.py" \
-    --raw-r1 "$RAW_R1" \
-    --trimmed-r1 "$QUALITY_R1" \
-    --deduplicated-r1 "$DEDUP_R1" \
-    --layout "$READ_LAYOUT" \
-    --output "$LOGS/preprocessing_stats.tsv"
 
 export PREPROCESSED_R1="$DEDUP_R1"
 printf '%s\n' "$PREPROCESSED_R1" > "$SAMPLE_DIR/work/preprocessed_r1.path"

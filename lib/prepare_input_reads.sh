@@ -5,8 +5,7 @@ source "$ROOT_DIR/lib/common.sh"
 
 WORK="$SAMPLE_DIR/work/00_input"
 RESULTS="$SAMPLE_DIR/results/reads"
-LOGS="$SAMPLE_DIR/logs"
-mkdir -p "$WORK" "$RESULTS" "$LOGS"
+mkdir -p "$WORK" "$RESULTS"
 
 log "Preprocessing and host depletion disabled: using input reads unchanged"
 LABEL=SE
@@ -20,17 +19,7 @@ if [[ "$READ_LAYOUT" == paired ]]; then
     CHECK_ARGS+=(--r2 "$INPUT_R2")
 fi
 
-"$PYTHON" "$ROOT_DIR/lib/check_assembly_reads.py" "${CHECK_ARGS[@]}" \
-    --output "$LOGS/input_stats.tsv"
-
-awk -F '\t' -v layout="$READ_LAYOUT" '
-    BEGIN {OFS="\t"; print "metric", "value"}
-    $1 == "reads" {
-        if (layout == "paired") print "raw_read_pairs", $2 / 2
-        else print "raw_reads", $2
-    }
-    END {print "preprocessing", "skipped"; print "host_depletion", "skipped"}
-' "$LOGS/input_stats.tsv" > "$LOGS/preprocessing_stats.tsv"
+"$PYTHON" "$ROOT_DIR/lib/check_assembly_reads.py" "${CHECK_ARGS[@]}"
 
 gzip -c "$INPUT_R1" > "$RESULTS/${SAMPLE}.input.${LABEL}.fastq.gz"
 printf '%s\n' "$INPUT_R1" > "$SAMPLE_DIR/work/host_depleted_r1.path"

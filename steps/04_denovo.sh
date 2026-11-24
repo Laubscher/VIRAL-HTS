@@ -6,8 +6,7 @@ source "$ROOT_DIR/lib/common.sh"
 WORK="$SAMPLE_DIR/work/04_denovo"
 RESULTS="$SAMPLE_DIR/results/denovo"
 ASSEMBLY_RESULTS="$RESULTS/assembly"
-LOGS="$SAMPLE_DIR/logs"
-mkdir -p "$WORK" "$ASSEMBLY_RESULTS" "$LOGS"
+mkdir -p "$WORK" "$ASSEMBLY_RESULTS"
 
 INPUT_R1="$(<"$SAMPLE_DIR/work/host_depleted_r1.path")"
 ASSEMBLY_DIR="$WORK/idba_ud"
@@ -38,8 +37,6 @@ if [[ ! -s "$INPUT_R1" ]]; then
     for output in "$ASSEMBLY" "$CONTIGS" "$LONG_CONTIGS" "$BLAST" "$VIRAL_CONTIGS"; do
         : > "$output"
     done
-    printf 'metric\tvalue\nreads\t0\nbases\t0\nminimum_read_length\t0\nmaximum_read_length\t0\n' \
-        > "$LOGS/${SAMPLE}.input_stats.tsv"
     log "De novo: no reads remain after host depletion"
     summarize_families
     exit 0
@@ -57,7 +54,7 @@ IDBA_HELP="$("$IDBA_UD" 2>&1 || true)"
 READ_LIMIT_PATTERN='fasta read file \(<=([0-9]+)\)'
 [[ "$IDBA_HELP" =~ $READ_LIMIT_PATTERN ]] || die "Cannot determine the IDBA-UD read-length limit"
 "$PYTHON" "$ROOT_DIR/lib/check_assembly_reads.py" "${CHECK_ARGS[@]}" \
-    --maximum-length "${BASH_REMATCH[1]}" --output "$LOGS/${SAMPLE}.input_stats.tsv"
+    --maximum-length "${BASH_REMATCH[1]}"
 
 if [[ "$READ_LAYOUT" == paired ]]; then
     log "De novo: interleaving paired FASTQ into FASTA"
