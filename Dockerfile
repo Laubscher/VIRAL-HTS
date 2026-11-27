@@ -36,7 +36,9 @@ RUN chmod -R a+rX /opt/fevir \
 # Viral references and adapters only. Host SNAP indexes are supplied at runtime.
 COPY --chmod=0555 db/virosaurus2023/ /opt/fevir/db/virosaurus2023/
 COPY --chmod=0555 db/Viral_protein_database/ /opt/fevir/db/Viral_protein_database/
-COPY --chmod=0444 db/fasta/TruSeqNexteraAdaptersAll.fa /opt/fevir/db/fasta/TruSeqNexteraAdaptersAll.fa
+# Make the adapter FASTA directory accessible to all users.
+RUN install -d -m 0755 /opt/fevir/db/fasta
+COPY --chmod=0444 db/fasta/TruSeqNexteraAdaptersAll.fa /opt/fevir/db/fasta/
 
 USER 1000:1000
 WORKDIR /output
