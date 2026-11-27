@@ -5,6 +5,7 @@ Viral detection from high-throughput sequencing data
 
 ### FEVIR v1.0.1
 ```text
++ Patched container permissions so non-root users can read the adapter FASTA
 + Updated Ubuntu packages to address security vulnerabilities
 + Simplified run logs
 ```
